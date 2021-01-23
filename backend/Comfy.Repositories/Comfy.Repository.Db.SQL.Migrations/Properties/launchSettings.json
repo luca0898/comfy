@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Comfy.Repository.Db.SQL.Migrations": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "luca"
+      }
+    }
+  }
+}

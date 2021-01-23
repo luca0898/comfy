@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Comfy.Product\Comfy.Product.csproj" />
+    <ProjectReference Include="..\Comfy.SystemObjects\Comfy.SystemObjects.csproj" />
+  </ItemGroup>
+
+</Project>
