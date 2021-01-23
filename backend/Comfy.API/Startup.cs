@@ -27,30 +27,9 @@ namespace Comfy
 
         public void ConfigureServices(IServiceCollection services)
         {
-            LoadRegistrations.ConfigureContainers(services);
-
-            services
-                .AddEntityFrameworkSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                {
-                    string connectionString = Configuration.GetConnectionString("comfyDbSqlConnectionString");
-                    options.UseSqlServer(connectionString, o => o.MigrationsAssembly("Comfy.Repository.Db.SQL.Migrations"));
-                });
+            LoadRegistrations.ConfigureContainers(services, Configuration);
 
             services.AddControllers();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "Comfy API",
-                });
-
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory logger)

@@ -11,8 +11,16 @@ namespace Comfy.Registers.DataBases
 {
     public class DbSQL
     {
-        public static void Load(IServiceCollection services)
+        public static void Load(IServiceCollection services, IConfiguration configuration)
         {
+            services
+                .AddEntityFrameworkSqlServer()
+                .AddDbContext<ApplicationDbContext>(options =>
+                {
+                    string connectionString = configuration.GetConnectionString("comfyDbSqlConnectionString");
+                    options.UseSqlServer(connectionString, o => o.MigrationsAssembly("Comfy.Repository.Db.SQL.Migrations"));
+                });
+
             services
                 .AddScoped<ApplicationDbContext>()
                 .AddScoped<DbContext>((x) => x.GetService<ApplicationDbContext>())
