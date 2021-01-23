@@ -25,7 +25,7 @@ namespace Comfy.Repository.Db.SQL.Migrations
 
             IConfigurationRoot config = builder.Build();
 
-            optionsBuilder.UseSqlServer(config["Data:DefaultConnection:ConnectionString"]);
+            optionsBuilder.UseSqlServer(config.GetConnectionString("comfyDbSqlConnectionString"));
 
             base.OnConfiguring(optionsBuilder);
         }
