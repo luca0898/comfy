@@ -6,7 +6,7 @@ using Comfy.PRODUCT.Entities;
 
 namespace Comfy.Repository.Db.SQL
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext Context => this;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -16,7 +16,6 @@ namespace Comfy.Repository.Db.SQL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Ignore<Claim>();
             modelBuilder.HasDefaultSchema("ComfyDb");
 
             base.OnModelCreating(modelBuilder);
