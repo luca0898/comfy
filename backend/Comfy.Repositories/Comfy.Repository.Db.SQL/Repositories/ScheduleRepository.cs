@@ -25,6 +25,7 @@ namespace Comfy.REPOSITORIES
                 return _dbContext.Set<Schedule>()
                     .AsQueryable()
                     .Where(schedule => schedule.Deleted == false)
+                    .OrderBy(o => o.Date)
                     .Skip(skip)
                     .Take(take);
 
