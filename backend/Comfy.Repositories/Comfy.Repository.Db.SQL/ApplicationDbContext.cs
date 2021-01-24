@@ -6,7 +6,7 @@ using Comfy.PRODUCT.Entities;
 
 namespace Comfy.Repository.Db.SQL
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext Context => this;
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
