@@ -14,7 +14,6 @@ namespace Comfy.Registers.DataBases
         public static void Load(IServiceCollection services, IConfiguration configuration)
         {
             services
-                .AddEntityFrameworkSqlServer()
                 .AddDbContext<ApplicationDbContext>(options =>
                 {
                     string connectionString = configuration.GetConnectionString("comfyDbSqlConnectionString");
