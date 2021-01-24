@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Comfy.Registers.Mapping
 {
@@ -11,10 +7,10 @@ namespace Comfy.Registers.Mapping
     {
         public static void Load(IServiceCollection services)
         {
-            var x =  new MapperConfiguration(config =>
-            {
-                config.AllowNullDestinationValues = true;
-                config.AllowNullCollections = true;
+            var x = new MapperConfiguration(config =>
+           {
+               config.AllowNullDestinationValues = true;
+               config.AllowNullCollections = true;
 
                 // Adding each profile
                 config.AddProfile<ScheduleProfile>();

@@ -1,10 +1,10 @@
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using System.IO;
+using Comfy.SystemObjects.Entities.Authentication;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace Comfy.Registers.Swagger
 {
@@ -12,6 +12,9 @@ namespace Comfy.Registers.Swagger
     {
         public static void Load(IServiceCollection services, IConfiguration configuration)
         {
+            AuthenticationSettings authenticationSettings = new AuthenticationSettings();
+            configuration.Bind(nameof(authenticationSettings), authenticationSettings);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -20,29 +23,28 @@ namespace Comfy.Registers.Swagger
                     Title = "Comfy API",
                 });
 
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Description = "API authorization using the bearer scheme",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey
-                });
+                string url = authenticationSettings.KeycloakSettings.BaseUrl;
+                string realm = authenticationSettings.KeycloakSettings.Realm;
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        Password = new OpenApiOAuthFlow
+                        {
+                            TokenUrl = new Uri($"{url}/auth/realms/{realm}/protocol/openid-connect/token"),
+                        }
+                    }
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
                         {
-                            Scheme = "oauth2",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-                            Reference = new OpenApiReference
-                            {
-                                Id = "Bearer",
-                                Type = ReferenceType.SecurityScheme,
-                            },
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "oauth2" }
                         },
-                        new List<string>()
+                        new string[] { }
                     }
                 });
 

@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using Comfy.PRODUCT.Contracts.Repositories;
+using Comfy.PRODUCT.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Comfy.Db.SQL;
-using Comfy.PRODUCT.Contracts.Repositories;
-using Comfy.PRODUCT.Entities;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Comfy.REPOSITORIES
 {

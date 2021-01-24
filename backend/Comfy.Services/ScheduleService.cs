@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Comfy.PRODUCT.Contracts.Repositories;
+﻿using Comfy.PRODUCT.Contracts.Repositories;
 using Comfy.PRODUCT.Contracts.Services;
 using Comfy.PRODUCT.Entities;
 using Comfy.SystemObjects;
 using Comfy.SystemObjects.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Comfy.Service
 {

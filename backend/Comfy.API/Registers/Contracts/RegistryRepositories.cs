@@ -1,10 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Comfy.PRODUCT.Contracts.Repositories;
+﻿using Comfy.PRODUCT.Contracts.Repositories;
 using Comfy.REPOSITORIES;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Comfy.Registers.Contracts.Repositories
 {

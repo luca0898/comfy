@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Comfy.PRODUCT.Entities;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Comfy.PRODUCT.Entities;
 
 namespace Comfy.PRODUCT.Contracts.Repositories
 {

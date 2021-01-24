@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Comfy.Db.SQL.Mappers;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using Comfy.Db.SQL.Mappers;
-using Comfy.PRODUCT.Entities;
 
 namespace Comfy.Repository.Db.SQL
 {
@@ -16,6 +14,7 @@ namespace Comfy.Repository.Db.SQL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<Claim>();
             modelBuilder.HasDefaultSchema("ComfyDb");
 
             base.OnModelCreating(modelBuilder);

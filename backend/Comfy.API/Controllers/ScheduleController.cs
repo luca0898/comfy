@@ -1,19 +1,19 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using Comfy.PRODUCT.Contracts.Services;
 using Comfy.PRODUCT.Entities;
 using Comfy.PRODUCT.ViewModel;
 using Comfy.SystemObjects.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Comfy.Controllers
 {
-    [Route("v1/schedules")]
+    [Route("v1/schedules"), Authorize("Authenticated")]
     public class ScheduleController : Controller
     {
         private readonly IMapper _mapper;

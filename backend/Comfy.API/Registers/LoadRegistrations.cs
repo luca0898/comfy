@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Comfy.Registers.Authentication;
 using Comfy.Registers.Contracts.Repositories;
 using Comfy.Registers.Contracts.Services;
 using Comfy.Registers.DataBases;
 using Comfy.Registers.Mapping;
 using Comfy.Registers.Swagger;
-using Comfy.Registers.Authentication;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Comfy.Registers
 {
@@ -15,9 +14,9 @@ namespace Comfy.Registers
         public static void ConfigureContainers(IServiceCollection services, IConfiguration configuration)
         {
             DbSQL.Load(services, configuration);
-            JwtRegister.Load(services, configuration);
+            AuthenticationRegister.Load(services, configuration);
             SwaggerRegister.Load(services, configuration);
-            
+
             AutoMapperLoadProfiles.Load(services);
             RegistryServices.Load(services);
             RegistryRepositories.Load(services);

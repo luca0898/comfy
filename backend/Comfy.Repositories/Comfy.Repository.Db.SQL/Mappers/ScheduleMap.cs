@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Comfy.PRODUCT.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using Comfy.PRODUCT.Entities;
 
 namespace Comfy.Db.SQL.Mappers
 {
