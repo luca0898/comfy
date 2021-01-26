@@ -43,41 +43,35 @@ namespace Comfy.Db.SQL.Repositories.Shared
 
         public async Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken)
         {
-            EntityEntry<TEntity> newly = await _dbSetEntity.AddAsync(entity);
-
-            await SaveChangesAsync(cancellationToken);
+            EntityEntry<TEntity> newly = await _dbSetEntity.AddAsync(entity, cancellationToken);
 
             return newly.Entity;
         }
         public async Task<TEntity> Update(TEntity entity, CancellationToken cancellationToken)
         {
-            EntityEntry<TEntity> updatedEntity = _dbSetEntity.Update(entity);
+            return await Task.Run(() =>
+            {
+                EntityEntry<TEntity> updatedEntity = _dbSetEntity.Update(entity);
 
-            await SaveChangesAsync(cancellationToken);
-
-            return updatedEntity.Entity;
+                return updatedEntity.Entity;
+            });
         }
         public async Task SoftDelete(TEntity entity, CancellationToken cancellationToken)
         {
-            entity.Deleted = true;
+            await Task.Run(() =>
+            {
+                entity.Deleted = true;
+                _dbSetEntity.Update(entity);
 
-            _dbSetEntity.Update(entity);
-
-            await SaveChangesAsync(cancellationToken);
+            }, cancellationToken);
         }
         public async Task HardDelete(TEntity entity, CancellationToken cancellationToken)
         {
-            _dbSetEntity.Remove(entity);
+            await Task.Run(() =>
+            {
+                _dbSetEntity.Remove(entity);
 
-            await SaveChangesAsync(cancellationToken);
-        }
-
-        private async Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            int result = await _dbContext.SaveChangesAsync(cancellationToken);
-
-            if (result > 0)
-                throw new Exception("Cannot save changes");
+            }, cancellationToken);
         }
     }
 }
