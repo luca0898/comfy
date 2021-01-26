@@ -63,11 +63,11 @@ namespace Comfy.Services.Shared
         {
             using (var uow = _uow.Create())
             {
-                TEntity TEntity = await _repository.FindOne(id, cancellationToken);
+                TEntity entity = await _repository.FindOne(id, cancellationToken);
 
-                if (TEntity != null && TEntity.Id > 0)
+                if (entity != null && entity.Id > 0)
                 {
-                    await _repository.SoftDelete(TEntity, cancellationToken);
+                    await _repository.SoftDelete(entity, cancellationToken);
                     await uow.CommitAsync();
                 }
                 else
