@@ -8,11 +8,11 @@ namespace Comfy.PRODUCT.Contracts.Repositories
     public interface IScheduleRepository
     {
         Task<IEnumerable<Schedule>> FindAll(CancellationToken cancellationToken, int skip = 0, int take = 20);
-        Task<Schedule> FindOne(int id);
+        Task<Schedule> FindOne(int id, CancellationToken cancellationToken);
 
-        Task<Schedule> Create(Schedule entity);
-        Task<Schedule> Update(Schedule entity);
-        Task SoftDelete(Schedule entity);
-        Task HardDelete(Schedule entity);
+        Task<Schedule> Create(Schedule entity, CancellationToken cancellationToken);
+        Task<Schedule> Update(Schedule entity, CancellationToken cancellationToken);
+        Task SoftDelete(Schedule entity, CancellationToken cancellationToken);
+        Task HardDelete(Schedule entity, CancellationToken cancellationToken);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Comfy.PRODUCT.Contracts.Repositories;
 using Comfy.PRODUCT.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -11,59 +13,70 @@ namespace Comfy.REPOSITORIES
     public class ScheduleRepository : IScheduleRepository
     {
         private readonly DbContext _dbContext;
+        private readonly DbSet<Schedule> _schedules;
+
         public ScheduleRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
+            _schedules = _dbContext.Set<Schedule>();
         }
 
         public async Task<IEnumerable<Schedule>> FindAll(CancellationToken cancellationToken, int skip = 0, int take = 20)
         {
             return await Task.Run(() =>
             {
-                return _dbContext.Set<Schedule>()
+                return _schedules
                     .AsQueryable()
                     .Where(schedule => schedule.Deleted == false)
-                    .OrderBy(o => o.Date)
+                    .OrderBy(schedule => schedule.Date)
                     .Skip(skip)
                     .Take(take);
 
             }, cancellationToken);
         }
 
-        public async Task<Schedule> FindOne(int id)
+        public async Task<Schedule> FindOne(int id, CancellationToken cancellationToken)
         {
-            return await _dbContext.Set<Schedule>().FindAsync(id);
+            return await _schedules.FindAsync(id, cancellationToken);
         }
 
-        public async Task<Schedule> Create(Schedule entity)
+        public async Task<Schedule> Create(Schedule entity, CancellationToken cancellationToken)
         {
-            var newly = await _dbContext.AddAsync(entity);
+            EntityEntry<Schedule> newly = await _schedules.AddAsync(entity);
 
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
 
-            return await Task.FromResult(newly.Entity);
+            return newly.Entity;
         }
-        public async Task<Schedule> Update(Schedule entity)
+        public async Task<Schedule> Update(Schedule entity, CancellationToken cancellationToken)
         {
-            var updatedEntity = _dbContext.Set<Schedule>().Update(entity);
+            EntityEntry<Schedule> updatedEntity = _schedules.Update(entity);
 
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
 
-            return await Task.FromResult(updatedEntity.Entity);
+            return updatedEntity.Entity;
         }
-        public async Task SoftDelete(Schedule entity)
+        public async Task SoftDelete(Schedule entity, CancellationToken cancellationToken)
         {
             entity.Deleted = true;
 
-            _dbContext.Set<Schedule>().Update(entity);
+            _schedules.Update(entity);
 
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
         }
-        public async Task HardDelete(Schedule entity)
+        public async Task HardDelete(Schedule entity, CancellationToken cancellationToken)
         {
-            _dbContext.Set<Schedule>().Remove(entity);
+            _schedules.Remove(entity);
 
-            await _dbContext.SaveChangesAsync();
+            await SaveChangesAsync(cancellationToken);
+        }
+
+        private async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            int result = await _dbContext.SaveChangesAsync(cancellationToken);
+
+            if (result > 0)
+                throw new Exception("Cannot save changes");
         }
     }
 }
