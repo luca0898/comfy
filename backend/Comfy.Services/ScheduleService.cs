@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Comfy.PRODUCT.Contracts.Repositories;
+﻿using Comfy.PRODUCT.Contracts.Repositories;
 using Comfy.PRODUCT.Contracts.Services;
 using Comfy.PRODUCT.Entities;
 using Comfy.SystemObjects;
 using Comfy.SystemObjects.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Comfy.Service
 {
@@ -26,30 +26,30 @@ namespace Comfy.Service
             return await _scheduleRepository.FindAll(cancellationToken, skip, take);
         }
 
-        public async Task<Schedule> GetOne(int id)
+        public async Task<Schedule> GetOne(int id, CancellationToken cancellationToken)
         {
-            return await _scheduleRepository.FindOne(id);
+            return await _scheduleRepository.FindOne(id, cancellationToken);
         }
 
-        public async Task<Schedule> Create(Schedule entity)
+        public async Task<Schedule> Create(Schedule entity, CancellationToken cancellationToken)
         {
             using (var uow = _uow.Create())
             {
-                Schedule result = await _scheduleRepository.Create(entity);
+                Schedule result = await _scheduleRepository.Create(entity, cancellationToken);
                 await uow.CommitAsync();
 
                 return result;
             }
         }
-        public async Task<Schedule> Update(Schedule entity)
+        public async Task<Schedule> Update(Schedule entity, CancellationToken cancellationToken)
         {
             using (var uow = _uow.Create())
             {
-                Schedule schedule = await _scheduleRepository.FindOne(entity.Id);
+                Schedule schedule = await _scheduleRepository.FindOne(entity.Id, cancellationToken);
 
                 if (schedule != null && schedule.Id > 0)
                 {
-                    var result = await _scheduleRepository.Update(entity);
+                    var result = await _scheduleRepository.Update(entity, cancellationToken);
                     await uow.CommitAsync();
 
                     return result;
@@ -60,15 +60,15 @@ namespace Comfy.Service
                 }
             }
         }
-        public async Task Delete(int id)
+        public async Task Delete(int id, CancellationToken cancellationToken)
         {
             using (var uow = _uow.Create())
             {
-                Schedule schedule = await _scheduleRepository.FindOne(id);
+                Schedule schedule = await _scheduleRepository.FindOne(id, cancellationToken);
 
                 if (schedule != null && schedule.Id > 0)
                 {
-                    await _scheduleRepository.SoftDelete(schedule);
+                    await _scheduleRepository.SoftDelete(schedule, cancellationToken);
                     await uow.CommitAsync();
                 }
                 else

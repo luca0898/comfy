@@ -19,8 +19,11 @@ namespace Comfy.Repository.Db.SQL.Migrations
 
             Console.WriteLine($"\nEnvironment Name:{environmentName}\n");
 
+            var currentDirectory = Directory.GetCurrentDirectory();
+
             builder
-                .AddJsonFile(Path.Combine(Directory.GetCurrentDirectory(), $"appsettings.{environmentName}.json"), false, true)
+                .AddJsonFile(Path.Combine(currentDirectory, $"appsettings.json"), true, true)
+                .AddJsonFile(Path.Combine(currentDirectory, $"appsettings.{environmentName}.json"), false, true)
                 .AddEnvironmentVariables();
 
             IConfigurationRoot config = builder.Build();

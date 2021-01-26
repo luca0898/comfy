@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Text;
-using Comfy.SystemObjects;
+﻿using Comfy.SystemObjects;
 using Comfy.SystemObjects.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Comfy.Db.SQL
 {

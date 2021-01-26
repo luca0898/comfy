@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Comfy.Db.SQL.Mappers;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-using Comfy.Db.SQL.Mappers;
-using Comfy.PRODUCT.Entities;
 
 namespace Comfy.Repository.Db.SQL
 {

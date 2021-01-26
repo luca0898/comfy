@@ -11,7 +11,7 @@
     "Comfy": {
       "commandName": "Project",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "luca"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }

@@ -1,11 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Comfy.Db.SQL;
+using Comfy.Repository.Db.SQL;
+using Comfy.SystemObjects;
+using Comfy.SystemObjects.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using Comfy.Db.SQL;
-using Comfy.SystemObjects.Interfaces;
-using Comfy.SystemObjects;
-using Comfy.Repository.Db.SQL;
 
 namespace Comfy.Registers.DataBases
 {
@@ -14,7 +13,6 @@ namespace Comfy.Registers.DataBases
         public static void Load(IServiceCollection services, IConfiguration configuration)
         {
             services
-                .AddEntityFrameworkSqlServer()
                 .AddDbContext<ApplicationDbContext>(options =>
                 {
                     string connectionString = configuration.GetConnectionString("comfyDbSqlConnectionString");

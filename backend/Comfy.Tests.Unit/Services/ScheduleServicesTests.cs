@@ -46,10 +46,11 @@ namespace Comfy.Tests.Unit
         public async Task GetOne_ShouldCallRepository()
         {
             int id = 0;
+            var cancellationToken = new CancellationTokenSource().Token;
 
-            await _service.GetOne(id);
+            await _service.GetOne(id, cancellationToken);
 
-            A.CallTo(() => _repository.FindOne(id))
+            A.CallTo(() => _repository.FindOne(id, cancellationToken))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -57,10 +58,11 @@ namespace Comfy.Tests.Unit
         public async Task Create_ShouldCallRepository()
         {
             Schedule entity = A.Fake<Schedule>();
+            var cancellationToken = new CancellationTokenSource().Token;
 
-            await _service.Create(entity);
+            await _service.Create(entity, cancellationToken);
 
-            A.CallTo(() => _repository.Create(entity))
+            A.CallTo(() => _repository.Create(entity, cancellationToken))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -70,12 +72,13 @@ namespace Comfy.Tests.Unit
             try
             {
                 Schedule entity = new Schedule { Id = 1 };
-                A.CallTo(() => _repository.FindOne(entity.Id))
+                var cancellationToken = new CancellationTokenSource().Token;
+                A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken))
                     .Returns(Task.FromResult<Schedule>(null));
 
-                await _service.Update(entity);
+                await _service.Update(entity, cancellationToken);
 
-                A.CallTo(() => _repository.Update(entity))
+                A.CallTo(() => _repository.Update(entity, cancellationToken))
                     .MustNotHaveHappened();
             }
             catch (ArgumentException ex)
@@ -95,13 +98,14 @@ namespace Comfy.Tests.Unit
         public async Task Update_ShouldCallUpdateRepository_WhenFoundEntityRecord()
         {
             Schedule entity = new Schedule { Id = 1 };
+            var cancellationToken = new CancellationTokenSource().Token;
 
-            A.CallTo(() => _repository.FindOne(entity.Id)).Returns(entity);
-            A.CallTo(() => _repository.Update(entity)).Returns(entity);
+            A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken)).Returns(entity);
+            A.CallTo(() => _repository.Update(entity, cancellationToken)).Returns(entity);
 
-            Schedule entityAfterUpdate = await _service.Update(entity);
+            Schedule entityAfterUpdate = await _service.Update(entity, cancellationToken);
 
-            A.CallTo(() => _repository.Update(entity)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.Update(entity, cancellationToken)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
@@ -109,12 +113,13 @@ namespace Comfy.Tests.Unit
         {
             int id = 1;
             Schedule entity = new Schedule { Id = 1 };
+            var cancellationToken = new CancellationTokenSource().Token;
 
-            A.CallTo(() => _repository.FindOne(entity.Id)).Returns(entity);
+            A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken)).Returns(entity);
 
-            await _service.Delete(id);
+            await _service.Delete(id, cancellationToken);
 
-            A.CallTo(() => _repository.SoftDelete(entity)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => _repository.SoftDelete(entity, cancellationToken)).MustHaveHappenedOnceExactly();
         }
 
         [Test]
@@ -124,13 +129,14 @@ namespace Comfy.Tests.Unit
             {
                 int id = 1;
                 Schedule entity = new Schedule { Id = 1 };
+                var cancellationToken = new CancellationTokenSource().Token;
 
-                A.CallTo(() => _repository.FindOne(entity.Id))
+                A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken))
                     .Returns(Task.FromResult<Schedule>(null));
 
-                await _service.Delete(id);
+                await _service.Delete(id, cancellationToken);
 
-                A.CallTo(() => _repository.SoftDelete(entity)).MustNotHaveHappened();
+                A.CallTo(() => _repository.SoftDelete(entity, cancellationToken)).MustNotHaveHappened();
             }
             catch (ArgumentException ex)
             {
