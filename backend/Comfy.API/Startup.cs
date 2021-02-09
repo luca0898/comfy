@@ -21,10 +21,7 @@ namespace Comfy
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(options =>
-            {
-                options.EnableEndpointRouting = true;
-            });
+            services.AddControllers();
 
             LoadRegistrations.ConfigureContainers(services, Configuration);
         }
