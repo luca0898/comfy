@@ -38,7 +38,7 @@ namespace Comfy.Db.SQL.Repositories.Shared
 
         public async Task<TEntity> FindOne(int id, CancellationToken cancellationToken)
         {
-            return await _dbSetEntity.FindAsync(id, cancellationToken);
+            return await _dbSetEntity.FindAsync(new object[] { id }, cancellationToken);
         }
 
         public async Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken)
