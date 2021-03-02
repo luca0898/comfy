@@ -2,6 +2,7 @@
 using Comfy.Product.Contracts.Services;
 using Comfy.Product.Entities;
 using Comfy.Product.ViewModel;
+using Comfy.SystemObjects.Attributes;
 using Comfy.SystemObjects.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Comfy.Controllers
 {
-    [Route("v1/schedule"), Authorize("Authenticated")]
+    [Route("v1/schedule"), BearerAuthorize("Authenticated")]
     public class ScheduleController : Controller
     {
         private readonly IMapper _mapper;
