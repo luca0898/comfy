@@ -22,7 +22,7 @@ namespace Comfy.Repository.Db.SQL.Migrations.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Comfy.PRODUCT.Entities.Schedule", b =>
+            modelBuilder.Entity("Comfy.Product.Entities.Schedule", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

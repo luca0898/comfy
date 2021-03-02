@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Comfy.PRODUCT.ViewModel
+namespace Comfy.Product.ViewModel
 {
     public class ScheduleViewModel
     {

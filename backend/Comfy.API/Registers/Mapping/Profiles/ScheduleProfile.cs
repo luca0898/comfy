@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Comfy.PRODUCT.Entities;
-using Comfy.PRODUCT.ViewModel;
+using Comfy.Product.Entities;
+using Comfy.Product.ViewModel;
 
 namespace Comfy.Registers.Mapping
 {

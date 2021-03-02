@@ -1,4 +1,4 @@
-﻿using Comfy.PRODUCT.Contracts.Services;
+﻿using Comfy.Product.Contracts.Services;
 using Comfy.Service;
 using Microsoft.Extensions.DependencyInjection;
 

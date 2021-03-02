@@ -45,7 +45,7 @@ namespace Comfy.Registers.Authentication
 
                         ValidIssuer = authenticationSettings.KeycloakSettings.Issuer,
                         ValidateIssuer = true,
-                        
+
                         ValidAudience = authenticationSettings.KeycloakSettings.Audience,
                         ValidateAudience = true
                     };

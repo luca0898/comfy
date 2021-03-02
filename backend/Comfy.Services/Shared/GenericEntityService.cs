@@ -1,18 +1,20 @@
 ﻿using Comfy.Product.Contracts.Repositories.Shared;
+using Comfy.Product.Contracts.Services.Shared;
 using Comfy.Product.Contracts.Shared;
 using Comfy.SystemObjects;
+using Comfy.SystemObjects.Exceptions;
 using Comfy.SystemObjects.Interfaces;
-using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Comfy.Services.Shared
 {
-    public abstract class GenericEntityService<TEntity> where TEntity : class, IEntity
+    public abstract class GenericEntityService<TEntity> : IGenericEntityService<TEntity> where TEntity : class, IEntity
     {
-        private readonly IUnitOfWorkFactory<UnitOfWork> _uow;
-        private readonly IGenericRepository<TEntity> _repository;
+        protected readonly IUnitOfWorkFactory<UnitOfWork> _uow;
+        protected readonly IGenericRepository<TEntity> _repository;
 
         public GenericEntityService(IGenericRepository<TEntity> TEntityRepository, IUnitOfWorkFactory<UnitOfWork> uow)
         {
@@ -20,27 +22,28 @@ namespace Comfy.Services.Shared
             _uow = uow;
         }
 
-        public async Task<IEnumerable<TEntity>> FindAll(CancellationToken cancellationToken, int skip = 0, int take = 20)
+        public async Task<IEnumerable<TEntity>> FindAllAsync(CancellationToken cancellationToken = default, int skip = 0, int take = 20)
         {
             return await _repository.FindAll(cancellationToken, skip, take);
         }
 
-        public async Task<TEntity> GetOne(int id, CancellationToken cancellationToken)
+        public async Task<TEntity> GetOneAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _repository.FindOne(id, cancellationToken);
         }
 
-        public async Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken)
+        public async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             using (var uow = _uow.Create())
             {
                 TEntity result = await _repository.Create(entity, cancellationToken);
-                await uow.CommitAsync();
+                await uow.CommitAsync(cancellationToken);
 
                 return result;
             }
         }
-        public async Task<TEntity> Update(TEntity entity, CancellationToken cancellationToken)
+
+        public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             using (var uow = _uow.Create())
             {
@@ -48,18 +51,20 @@ namespace Comfy.Services.Shared
 
                 if (schedule != null && schedule.Id > 0)
                 {
-                    var result = await _repository.Update(entity, cancellationToken);
-                    await uow.CommitAsync();
+                    TEntity result = await _repository.Update(entity, cancellationToken);
+                    await uow.CommitAsync(cancellationToken);
 
                     return result;
                 }
                 else
                 {
-                    throw new ArgumentException($"{typeof(TEntity).Name} {entity.Id} not found");
+                    string message = $"{typeof(TEntity).Name} {entity.Id} not found";
+                    throw new ComfyApplicationException(message, HttpStatusCode.NotFound);
                 }
             }
         }
-        public async Task Delete(int id, CancellationToken cancellationToken)
+
+        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             using (var uow = _uow.Create())
             {
@@ -68,11 +73,12 @@ namespace Comfy.Services.Shared
                 if (entity != null && entity.Id > 0)
                 {
                     await _repository.SoftDelete(entity, cancellationToken);
-                    await uow.CommitAsync();
+                    await uow.CommitAsync(cancellationToken);
                 }
                 else
                 {
-                    throw new ArgumentException($"{typeof(TEntity).Name} {id} not found");
+                    string message = $"{typeof(TEntity).Name} {id} not found";
+                    throw new ComfyApplicationException(message, HttpStatusCode.NotFound);
                 }
             }
         }

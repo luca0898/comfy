@@ -2,10 +2,8 @@
 using Comfy.Product.Contracts.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,32 +20,29 @@ namespace Comfy.Db.SQL.Repositories.Shared
             _dbSetEntity = _dbContext.Set<TEntity>();
         }
 
-        public async Task<IEnumerable<TEntity>> FindAll(CancellationToken cancellationToken, int skip = 0, int take = 20)
+        public async Task<IEnumerable<TEntity>> FindAll(CancellationToken cancellationToken = default, int skip = 0, int take = 20)
         {
-            return await Task.Run(() =>
-            {
-                return _dbSetEntity
-                    .AsQueryable()
-                    .Where(schedule => schedule.Deleted == false)
-                    .OrderBy(schedule => schedule.Id)
-                    .Skip(skip)
-                    .Take(take);
-
-            }, cancellationToken);
+            return await _dbSetEntity
+                .AsQueryable()
+                .Where(schedule => schedule.Deleted == false)
+                .OrderBy(schedule => schedule.Id)
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<TEntity> FindOne(int id, CancellationToken cancellationToken)
+        public async Task<TEntity> FindOne(int id, CancellationToken cancellationToken = default)
         {
             return await _dbSetEntity.FindAsync(new object[] { id }, cancellationToken);
         }
 
-        public async Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken)
+        public async Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken = default)
         {
             EntityEntry<TEntity> newly = await _dbSetEntity.AddAsync(entity, cancellationToken);
 
             return newly.Entity;
         }
-        public async Task<TEntity> Update(TEntity entity, CancellationToken cancellationToken)
+        public async Task<TEntity> Update(TEntity entity, CancellationToken cancellationToken = default)
         {
             return await Task.Run(() =>
             {
@@ -56,7 +51,7 @@ namespace Comfy.Db.SQL.Repositories.Shared
                 return updatedEntity.Entity;
             });
         }
-        public async Task SoftDelete(TEntity entity, CancellationToken cancellationToken)
+        public async Task SoftDelete(TEntity entity, CancellationToken cancellationToken = default)
         {
             await Task.Run(() =>
             {
@@ -65,7 +60,7 @@ namespace Comfy.Db.SQL.Repositories.Shared
 
             }, cancellationToken);
         }
-        public async Task HardDelete(TEntity entity, CancellationToken cancellationToken)
+        public async Task HardDelete(TEntity entity, CancellationToken cancellationToken = default)
         {
             await Task.Run(() =>
             {

@@ -1,12 +1,12 @@
-﻿using Comfy.PRODUCT.Contracts.Repositories;
-using Comfy.PRODUCT.Contracts.Services;
-using Comfy.PRODUCT.Entities;
+﻿using Comfy.Product.Contracts.Repositories;
+using Comfy.Product.Contracts.Services;
+using Comfy.Product.Entities;
 using Comfy.Service;
 using Comfy.SystemObjects;
+using Comfy.SystemObjects.Exceptions;
 using Comfy.SystemObjects.Interfaces;
 using FakeItEasy;
 using NUnit.Framework;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -36,7 +36,7 @@ namespace Comfy.Tests.Unit
             int take = 10;
             var cancellationToken = new CancellationTokenSource().Token;
 
-            await _service.FindAll(cancellationToken, skip, take);
+            await _service.FindAllAsync(cancellationToken, skip, take);
 
             A.CallTo(() => _repository.FindAll(cancellationToken, skip, take))
                 .MustHaveHappenedOnceExactly();
@@ -48,7 +48,7 @@ namespace Comfy.Tests.Unit
             int id = 0;
             var cancellationToken = new CancellationTokenSource().Token;
 
-            await _service.GetOne(id, cancellationToken);
+            await _service.GetOneAsync(id, cancellationToken);
 
             A.CallTo(() => _repository.FindOne(id, cancellationToken))
                 .MustHaveHappenedOnceExactly();
@@ -60,7 +60,7 @@ namespace Comfy.Tests.Unit
             Schedule entity = A.Fake<Schedule>();
             var cancellationToken = new CancellationTokenSource().Token;
 
-            await _service.Create(entity, cancellationToken);
+            await _service.CreateAsync(entity, cancellationToken);
 
             A.CallTo(() => _repository.Create(entity, cancellationToken))
                 .MustHaveHappenedOnceExactly();
@@ -76,12 +76,12 @@ namespace Comfy.Tests.Unit
                 A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken))
                     .Returns(Task.FromResult<Schedule>(null));
 
-                await _service.Update(entity, cancellationToken);
+                await _service.UpdateAsync(entity, cancellationToken);
 
                 A.CallTo(() => _repository.Update(entity, cancellationToken))
                     .MustNotHaveHappened();
             }
-            catch (ArgumentException ex)
+            catch (ComfyApplicationException ex)
             {
                 if (ex.Message.Equals($"Schedule 1 not found"))
                 {
@@ -103,7 +103,7 @@ namespace Comfy.Tests.Unit
             A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken)).Returns(entity);
             A.CallTo(() => _repository.Update(entity, cancellationToken)).Returns(entity);
 
-            Schedule entityAfterUpdate = await _service.Update(entity, cancellationToken);
+            Schedule entityAfterUpdate = await _service.UpdateAsync(entity, cancellationToken);
 
             A.CallTo(() => _repository.Update(entity, cancellationToken)).MustHaveHappenedOnceExactly();
         }
@@ -117,7 +117,7 @@ namespace Comfy.Tests.Unit
 
             A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken)).Returns(entity);
 
-            await _service.Delete(id, cancellationToken);
+            await _service.DeleteAsync(id, cancellationToken);
 
             A.CallTo(() => _repository.SoftDelete(entity, cancellationToken)).MustHaveHappenedOnceExactly();
         }
@@ -134,11 +134,11 @@ namespace Comfy.Tests.Unit
                 A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken))
                     .Returns(Task.FromResult<Schedule>(null));
 
-                await _service.Delete(id, cancellationToken);
+                await _service.DeleteAsync(id, cancellationToken);
 
                 A.CallTo(() => _repository.SoftDelete(entity, cancellationToken)).MustNotHaveHappened();
             }
-            catch (ArgumentException ex)
+            catch (ComfyApplicationException ex)
             {
                 if (ex.Message.Equals($"Schedule 1 not found"))
                 {

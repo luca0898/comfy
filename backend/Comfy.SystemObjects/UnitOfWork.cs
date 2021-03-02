@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Data;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Comfy.SystemObjects
@@ -13,6 +14,7 @@ namespace Comfy.SystemObjects
         private readonly DbContext _dbContext;
         private bool _disposed = false;
         private bool _alreadyInTransaction = false;
+
         public UnitOfWork(DbContext dbContext, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
         {
             if (dbContext.Database.CurrentTransaction == null)
@@ -26,6 +28,7 @@ namespace Comfy.SystemObjects
 
             _dbContext = dbContext;
         }
+
         public virtual void Commit()
         {
             if (!_alreadyInTransaction)
@@ -35,15 +38,15 @@ namespace Comfy.SystemObjects
             }
         }
 
-        public virtual async Task CommitAsync()
+        public virtual async Task CommitAsync(CancellationToken cancellationToken)
         {
-
             if (!_alreadyInTransaction)
             {
-                await _dbContext.SaveChangesAsync();
-                _transaction.Commit();
+                await _dbContext.SaveChangesAsync(cancellationToken);
+                await _transaction.CommitAsync(cancellationToken);
             }
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (disposing && !_disposed)
@@ -53,9 +56,11 @@ namespace Comfy.SystemObjects
                     _transaction.Dispose();
                     _transaction = null;
                 }
+
                 _disposed = true;
             }
         }
+
         public virtual void Dispose()
         {
             Dispose(true);

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Comfy.Product.Contracts.Repositories.Shared;
-using Comfy.PRODUCT.Entities;
+﻿using Comfy.Product.Contracts.Repositories.Shared;
+using Comfy.Product.Entities;
 
-namespace Comfy.PRODUCT.Contracts.Repositories
+namespace Comfy.Product.Contracts.Repositories
 {
     public interface IScheduleRepository : IGenericRepository<Schedule>
     {

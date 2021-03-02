@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Comfy.SystemObjects.Interfaces
@@ -6,6 +7,6 @@ namespace Comfy.SystemObjects.Interfaces
     public interface IUnitOfWork : IDisposable
     {
         void Commit();
-        Task CommitAsync();
+        Task CommitAsync(CancellationToken cancellationToken);
     }
 }

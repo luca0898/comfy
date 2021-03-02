@@ -1,15 +1,9 @@
 ﻿using Comfy.Db.SQL.Repositories.Shared;
-using Comfy.PRODUCT.Contracts.Repositories;
-using Comfy.PRODUCT.Entities;
+using Comfy.Product.Contracts.Repositories;
+using Comfy.Product.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Comfy.REPOSITORIES
+namespace Comfy.Db.SQL.Repositories
 {
     public class ScheduleRepository : GenericRelationalRepository<Schedule>, IScheduleRepository
     {

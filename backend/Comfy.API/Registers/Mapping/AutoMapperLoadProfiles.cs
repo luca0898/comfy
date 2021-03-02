@@ -8,9 +8,9 @@ namespace Comfy.Registers.Mapping
         public static void Load(IServiceCollection services)
         {
             var x = new MapperConfiguration(config =>
-           {
-               config.AllowNullDestinationValues = true;
-               config.AllowNullCollections = true;
+            {
+                config.AllowNullDestinationValues = true;
+                config.AllowNullCollections = true;
 
                 // Adding each profile
                 config.AddProfile<ScheduleProfile>();

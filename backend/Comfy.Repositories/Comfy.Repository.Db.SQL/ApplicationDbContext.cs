@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Comfy.Repository.Db.SQL
+namespace Comfy.Db.SQL
 {
     public class ApplicationDbContext : DbContext
     {

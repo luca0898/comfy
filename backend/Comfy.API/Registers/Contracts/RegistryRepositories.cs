@@ -1,5 +1,5 @@
-﻿using Comfy.PRODUCT.Contracts.Repositories;
-using Comfy.REPOSITORIES;
+﻿using Comfy.Db.SQL.Repositories;
+using Comfy.Product.Contracts.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Comfy.Registers.Contracts.Repositories

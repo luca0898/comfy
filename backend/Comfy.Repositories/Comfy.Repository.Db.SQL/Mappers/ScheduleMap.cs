@@ -1,4 +1,4 @@
-﻿using Comfy.PRODUCT.Entities;
+﻿using Comfy.Product.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Comfy.Product.Contracts.Shared
+﻿namespace Comfy.Product.Contracts.Shared
 {
     public interface IEntity
     {

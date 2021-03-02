@@ -1,7 +1,7 @@
 ﻿using Comfy.Product.Contracts.Services.Shared;
-using Comfy.PRODUCT.Entities;
+using Comfy.Product.Entities;
 
-namespace Comfy.PRODUCT.Contracts.Services
+namespace Comfy.Product.Contracts.Services
 {
     public interface IScheduleService : IGenericEntityService<Schedule>
     {
