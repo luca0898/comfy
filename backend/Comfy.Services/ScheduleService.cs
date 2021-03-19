@@ -7,11 +7,12 @@ using Comfy.SystemObjects.Interfaces;
 
 namespace Comfy.Service
 {
-    public class ScheduleService : GenericEntityService<Schedule>, IScheduleService
+    public class ScheduleService : GenericCachedEntityService<Schedule>, IScheduleService
     {
         public ScheduleService(
+            ICacheProvider cacheProvider,
             IScheduleRepository scheduleRepository,
-            IUnitOfWorkFactory<UnitOfWork> uow) : base(scheduleRepository, uow)
+            IUnitOfWorkFactory<UnitOfWork> uow) : base(cacheProvider, scheduleRepository, uow)
         {
         }
     }

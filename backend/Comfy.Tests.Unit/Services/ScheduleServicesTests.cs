@@ -7,6 +7,7 @@ using Comfy.SystemObjects.Exceptions;
 using Comfy.SystemObjects.Interfaces;
 using FakeItEasy;
 using NUnit.Framework;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,16 +18,18 @@ namespace Comfy.Tests.Unit
     {
         IScheduleService _service;
 
+        ICacheProvider _cacheProvider;
         IScheduleRepository _repository;
         IUnitOfWorkFactory<UnitOfWork> _uow;
 
         [SetUp]
         public void SetUp()
         {
+            _cacheProvider = A.Fake<ICacheProvider>();
             _repository = A.Fake<IScheduleRepository>();
             _uow = A.Fake<IUnitOfWorkFactory<UnitOfWork>>();
 
-            _service = new ScheduleService(_repository, _uow);
+            _service = new ScheduleService(_cacheProvider, _repository, _uow);
         }
 
         [Test]
@@ -35,6 +38,11 @@ namespace Comfy.Tests.Unit
             int skip = 0;
             int take = 10;
             var cancellationToken = new CancellationTokenSource().Token;
+            string key = $"Anonimo:{ typeof(Schedule).Name }:FindAll:Skip={skip}:Take={take}";
+            IEnumerable<Schedule> expectedDataFromCache = null;
+
+            A.CallTo(() => _cacheProvider.FindCacheAsync<IEnumerable<Schedule>>(key, cancellationToken))
+                .Returns(expectedDataFromCache);
 
             await _service.FindAllAsync(cancellationToken, skip, take);
 
@@ -47,6 +55,11 @@ namespace Comfy.Tests.Unit
         {
             int id = 0;
             var cancellationToken = new CancellationTokenSource().Token;
+            string key = $"Anonimo:{ typeof(Schedule).Name }:GetOne={id}";
+            Schedule expectedDataFromCache = null;
+
+            A.CallTo(() => _cacheProvider.FindCacheAsync<Schedule>(key, cancellationToken))
+                .Returns(expectedDataFromCache);
 
             await _service.GetOneAsync(id, cancellationToken);
 
