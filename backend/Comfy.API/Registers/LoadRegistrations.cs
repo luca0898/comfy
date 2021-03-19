@@ -1,4 +1,4 @@
-﻿using Comfy.Registers.Authentication;
+﻿using Comfy.API.Registers.Cache;
 using Comfy.Registers.Contracts.Repositories;
 using Comfy.Registers.Contracts.Services;
 using Comfy.Registers.DataBases;
@@ -14,6 +14,7 @@ namespace Comfy.Registers
         public static void ConfigureContainers(IServiceCollection services, IConfiguration configuration)
         {
             DbSQL.Load(services, configuration);
+            RedisCacheRegister.Load(services, configuration);
             AuthenticationRegister.Load(services, configuration);
             SwaggerRegister.Load(services, configuration);
 

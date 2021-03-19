@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Comfy.Product\Comfy.Product.csproj" />
+    <ProjectReference Include="..\Comfy.Repositories\Comfy.Repository.Cache.Redis\Comfy.Cache.Redis.csproj" />
     <ProjectReference Include="..\Comfy.Services\Comfy.Services.csproj" />
   </ItemGroup>
 

@@ -22,17 +22,17 @@ namespace Comfy.Services.Shared
             _uow = uow;
         }
 
-        public async Task<IEnumerable<TEntity>> FindAllAsync(CancellationToken cancellationToken = default, int skip = 0, int take = 20)
+        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(CancellationToken cancellationToken = default, int skip = 0, int take = 20)
         {
             return await _repository.FindAll(cancellationToken, skip, take);
         }
 
-        public async Task<TEntity> GetOneAsync(int id, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> GetOneAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _repository.FindOne(id, cancellationToken);
         }
 
-        public async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             using (var uow = _uow.Create())
             {
@@ -43,7 +43,7 @@ namespace Comfy.Services.Shared
             }
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
             using (var uow = _uow.Create())
             {
@@ -64,7 +64,7 @@ namespace Comfy.Services.Shared
             }
         }
 
-        public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+        public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
             using (var uow = _uow.Create())
             {
