@@ -8,9 +8,14 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "1434:1433"
+    volumes:
+      - mssql:/var/opt/mssql/data
 
   redis:
     image: redis:alpine
     command: redis-server
     ports:
       - 6379:6379
+      
+volumes:
+  mssql:
