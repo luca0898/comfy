@@ -23,13 +23,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.SYSTEM_OBJECTS", "0.SYSTE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comfy.SystemObjects", "Comfy.SystemObjects\Comfy.SystemObjects.csproj", "{9B5D4E58-F51B-4ABF-B7B7-CC16D003E471}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comfy.Repository.Db.SQL.Migrations", "Comfy.Repositories\Comfy.Repository.Db.SQL.Migrations\Comfy.Db.SQL.Migrations.csproj", "{63F1C904-4513-4406-BD92-CC023E2BFCC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comfy.Db.SQL.Migrations", "Comfy.Repositories\Comfy.Repository.Db.SQL.Migrations\Comfy.Db.SQL.Migrations.csproj", "{63F1C904-4513-4406-BD92-CC023E2BFCC7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.TESTS", "5.TESTS", "{E194CA0D-F189-4188-B181-281CB098F620}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comfy.Tests.Unit", "Comfy.Tests.Unit\Comfy.Tests.Unit.csproj", "{8704C037-385D-4DD1-ABB7-A83CB624700F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comfy.Tests.Integration", "Comfy.Tests.Integration\Comfy.Tests.Integration.csproj", "{218249FF-6A42-40F0-AFD9-03183C907346}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Comfy.Cache.Redis", "Comfy.Repositories\Comfy.Repository.Cache.Redis\Comfy.Cache.Redis.csproj", "{B86C0822-6856-4AC9-91EC-273711F201CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{218249FF-6A42-40F0-AFD9-03183C907346}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{218249FF-6A42-40F0-AFD9-03183C907346}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{218249FF-6A42-40F0-AFD9-03183C907346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B86C0822-6856-4AC9-91EC-273711F201CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B86C0822-6856-4AC9-91EC-273711F201CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B86C0822-6856-4AC9-91EC-273711F201CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B86C0822-6856-4AC9-91EC-273711F201CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{63F1C904-4513-4406-BD92-CC023E2BFCC7} = {3E803361-25FF-47FA-81DB-6EBADAE12DA3}
 		{8704C037-385D-4DD1-ABB7-A83CB624700F} = {E194CA0D-F189-4188-B181-281CB098F620}
 		{218249FF-6A42-40F0-AFD9-03183C907346} = {E194CA0D-F189-4188-B181-281CB098F620}
+		{B86C0822-6856-4AC9-91EC-273711F201CB} = {3E803361-25FF-47FA-81DB-6EBADAE12DA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {48AF967F-1617-47CA-8917-3C61CA8746BA}
