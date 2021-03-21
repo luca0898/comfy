@@ -87,7 +87,7 @@ namespace Comfy.Services.Shared
 
             if (record != null)
             {
-                await _cacheProvider.RemoveAsync($"Summary:{ typeof(TEntity).Name }");
+                await _cacheProvider.InvalidateCacheAsync<TEntity>();
             }
 
             return record;
@@ -97,7 +97,7 @@ namespace Comfy.Services.Shared
         {
             await base.DeleteAsync(id, cancellationToken);
 
-            await _cacheProvider.RemoveAsync($"Summary:{ typeof(TEntity).Name }");
+            await _cacheProvider.InvalidateCacheAsync<TEntity>();
         }
     }
 }

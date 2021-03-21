@@ -76,6 +76,8 @@ namespace Comfy.Cache.Redis
                 {
                     await _cache.RemoveAsync(key);
                 }
+
+                await _cache.RemoveAsync(summary);
             }
         }
 
