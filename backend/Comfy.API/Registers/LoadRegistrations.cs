@@ -1,4 +1,5 @@
 ﻿using Comfy.API.Registers.Cache;
+using Comfy.Registers.Authentication;
 using Comfy.Registers.Contracts.Repositories;
 using Comfy.Registers.Contracts.Services;
 using Comfy.Registers.DataBases;
