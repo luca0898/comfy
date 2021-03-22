@@ -1,3 +1,4 @@
+using Comfy.API.Middlewares;
 using Comfy.Middlewares;
 using Comfy.Registers;
 using Microsoft.AspNetCore.Builder;
@@ -23,11 +24,27 @@ namespace Comfy
         {
             services.AddControllers();
 
+            services.AddLogging(config =>
+            {
+                config.ClearProviders();
+
+                config.AddConfiguration(Configuration.GetSection("Logging"));
+                config.AddEventSourceLogger();
+
+                if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                {
+                    config.AddDebug();
+                    config.AddConsole();
+                }
+            });
+
             LoadRegistrations.ConfigureContainers(services, Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory logger)
         {
+            app.UseMiddleware<RequestLoggingMiddleware>();
+
             app.UseAuthentication();
 
             app.UseCors((builder) =>

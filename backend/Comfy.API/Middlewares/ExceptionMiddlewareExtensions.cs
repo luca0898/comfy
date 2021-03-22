@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using System.Net.Mime;
 
 namespace Comfy.Middlewares
 {
@@ -18,8 +19,7 @@ namespace Comfy.Middlewares
             {
                 appError.Run(async context =>
                 {
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    context.Response.ContentType = "application/json";
+                    context.Response.ContentType = MediaTypeNames.Application.Json;
                     IExceptionHandlerFeature contextFeature = context.Features.Get<IExceptionHandlerFeature>();
 
                     if (contextFeature != null)
@@ -27,8 +27,7 @@ namespace Comfy.Middlewares
                         if (contextFeature.Error is ComfyApplicationException)
                         {
                             ComfyApplicationException comfyException = contextFeature.Error as ComfyApplicationException;
-                            logger.LogError("There was an exception in the application: {comfyException}", comfyException);
-                            context.Response.StatusCode = (int)comfyException.StatusCode;
+                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
 
                             ErrorResponseViewModel errorModel = new ErrorResponseViewModel
                             {
