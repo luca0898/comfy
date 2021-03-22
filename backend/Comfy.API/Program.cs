@@ -17,13 +17,6 @@ namespace Comfy
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.CaptureStartupErrors(true)
-                        .UseSetting("detailedErrors", "true")
-                        .ConfigureLogging((context, logging) =>
-                        {
-                            logging.ClearProviders();
-                            logging.AddConsole();
-                            logging.AddDebug();
-                        })
                         .UseContentRoot(Directory.GetCurrentDirectory())
                         .UseStartup<Startup>();
                 });

@@ -1,5 +1,4 @@
 ﻿using Comfy.SystemObjects.Exceptions;
-using Comfy.SystemObjects.Extensions;
 using Comfy.SystemObjects.Interfaces;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -44,6 +43,7 @@ namespace Comfy.Cache.Redis
 
         public async Task<T> FindCacheAsync<T>(string key, CancellationToken cancellationToken = default)
         {
+            _logger.LogInformation("Querying cached data for the \"{CACHE_KEY}\" key", key);
             string cache = await _cache.GetStringAsync(key, cancellationToken);
 
             if (string.IsNullOrEmpty(cache))
@@ -78,6 +78,7 @@ namespace Comfy.Cache.Redis
                 }
 
                 await _cache.RemoveAsync(summary);
+                _logger.LogInformation("Summary \"{SUMMARY_KEYS}\" was deleted with {AMOUNT} keys", summary, listOfKeysInTheSummary.Count);
             }
         }
 

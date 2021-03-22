@@ -4,10 +4,9 @@ using Comfy.Product.Contracts.Shared;
 using Comfy.SystemObjects;
 using Comfy.SystemObjects.Interfaces;
 using System.Collections.Generic;
-using System.Threading;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 
 namespace Comfy.Services.Shared
 {
