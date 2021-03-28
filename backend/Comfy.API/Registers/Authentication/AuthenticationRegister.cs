@@ -1,9 +1,14 @@
+using Comfy.Product.Contracts.Services;
+using Comfy.Product.Entities;
 using Comfy.SystemObjects.Entities.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.IO;
+using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
@@ -71,6 +76,31 @@ namespace Comfy.Registers.Authentication
             {
                 opt.AddPolicy("Authenticated", p => p.RequireAssertion(require => require.User.Identity.IsAuthenticated));
                 opt.AddPolicy("Anonymous", p => p.RequireAssertion(o => true));
+            });
+
+            services.AddScoped<ICurrentSessionUser>(c =>
+            {
+                var context = c.GetRequiredService<IHttpContextAccessor>().HttpContext;
+
+                if (context != null && context.User.Identity.IsAuthenticated)
+                {
+                    ClaimsIdentity identity = (ClaimsIdentity)context.User.Identity;
+
+                    string identifierSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+                    string givenNameSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname";
+                    string surNameSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
+                    string emailAddressSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+
+                    return new CurrentSessionUser
+                    {
+                        Id = identity.FindFirst(c => c.Type == identifierSchema).Value,
+                        GivenName = identity.FindFirst(c => c.Type == givenNameSchema).Value,
+                        SurName = identity.FindFirst(c => c.Type == surNameSchema).Value,
+                        EmailAddress = identity.FindFirst(c => c.Type == emailAddressSchema).Value
+                    };
+                }
+
+                return null;
             });
         }
     }

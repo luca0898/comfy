@@ -5,6 +5,7 @@ using Comfy.Registers.Contracts.Services;
 using Comfy.Registers.DataBases;
 using Comfy.Registers.Mapping;
 using Comfy.Registers.Swagger;
+using Comfy.Registers.Validators;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +15,7 @@ namespace Comfy.Registers
     {
         public static void ConfigureContainers(IServiceCollection services, IConfiguration configuration)
         {
+            LoadValidators.Load(services);
             DbSQL.Load(services, configuration);
             RedisCacheRegister.Load(services, configuration);
             AuthenticationRegister.Load(services, configuration);

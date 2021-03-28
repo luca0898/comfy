@@ -1,4 +1,5 @@
 ﻿using Comfy.Product.Contracts.Repositories.Shared;
+using Comfy.Product.Contracts.Services;
 using Comfy.Product.Contracts.Services.Shared;
 using Comfy.Product.Contracts.Shared;
 using Comfy.SystemObjects;
@@ -12,19 +13,22 @@ namespace Comfy.Services.Shared
 {
     public abstract class GenericCachedEntityService<TEntity> : GenericEntityService<TEntity>, IGenericCachedEntityService<TEntity> where TEntity : class, IEntity
     {
+        public ICurrentSessionUser _currentSessionUser { get; private set; }
         protected readonly ICacheProvider _cacheProvider;
 
         public GenericCachedEntityService(
+            ICurrentSessionUser currentSessionUser,
             ICacheProvider cacheProvider,
             IGenericRepository<TEntity> TEntityRepository,
             IUnitOfWorkFactory<UnitOfWork> uow) : base(TEntityRepository, uow)
         {
+            _currentSessionUser = currentSessionUser;
             _cacheProvider = cacheProvider;
         }
 
         public override async Task<IEnumerable<TEntity>> FindAllAsync(CancellationToken cancellationToken = default, int skip = 0, int take = 20)
         {
-            string key = $"Anonimo:{ typeof(TEntity).Name }:FindAll:Skip={skip}:Take={take}";
+            string key = $"{GetCacheKeyPrefix()}:{ typeof(TEntity).Name }:FindAll:Skip={skip}:Take={take}";
 
             IEnumerable<TEntity> dataFromCache = await _cacheProvider.FindCacheAsync<IEnumerable<TEntity>>(key, cancellationToken);
 
@@ -47,7 +51,7 @@ namespace Comfy.Services.Shared
 
         public override async Task<TEntity> GetOneAsync(int id, CancellationToken cancellationToken = default)
         {
-            string key = $"Anonimo:{ typeof(TEntity).Name }:GetOne={id}";
+            string key = $"{GetCacheKeyPrefix()}:{ typeof(TEntity).Name }:GetOne={id}";
 
             TEntity dataFromCache = await _cacheProvider.FindCacheAsync<TEntity>(key, cancellationToken);
 
@@ -97,6 +101,18 @@ namespace Comfy.Services.Shared
             await base.DeleteAsync(id, cancellationToken);
 
             await _cacheProvider.InvalidateCacheAsync<TEntity>();
+        }
+
+        private string GetCacheKeyPrefix()
+        {
+            if (_currentSessionUser != null && string.IsNullOrEmpty(_currentSessionUser.Id) == false)
+            {
+                return $"{_currentSessionUser.Id}";
+            }
+            else
+            {
+                return "Anonymous";
+            }
         }
     }
 }

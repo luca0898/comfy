@@ -10,9 +10,10 @@ namespace Comfy.Service
     public class ScheduleService : GenericCachedEntityService<Schedule>, IScheduleService
     {
         public ScheduleService(
+            ICurrentSessionUser currentSessionUser,
             ICacheProvider cacheProvider,
             IScheduleRepository scheduleRepository,
-            IUnitOfWorkFactory<UnitOfWork> uow) : base(cacheProvider, scheduleRepository, uow)
+            IUnitOfWorkFactory<UnitOfWork> uow) : base(currentSessionUser, cacheProvider, scheduleRepository, uow)
         {
         }
     }

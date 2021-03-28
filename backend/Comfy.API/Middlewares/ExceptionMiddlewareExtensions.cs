@@ -44,7 +44,6 @@ namespace Comfy.Middlewares
 
                             await context.Response.WriteAsync(new ErrorResponseViewModel()
                             {
-                                StatusCode = context.Response.StatusCode,
                                 Message = "Internal Server Error."
                             }.ToString());
                         }
