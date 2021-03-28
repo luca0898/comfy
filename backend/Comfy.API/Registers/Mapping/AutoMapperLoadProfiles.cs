@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Comfy.API.Registers.Mapping.Profiles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Comfy.Registers.Mapping
@@ -14,6 +15,7 @@ namespace Comfy.Registers.Mapping
 
                 // Adding each profile
                 config.AddProfile<ScheduleProfile>();
+                config.AddProfile<UserProfile>();
                 // ...
             }).CreateMapper();
 

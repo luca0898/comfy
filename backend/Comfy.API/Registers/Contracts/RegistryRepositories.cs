@@ -9,6 +9,7 @@ namespace Comfy.Registers.Contracts.Repositories
         public static void Load(IServiceCollection services)
         {
             services.AddTransient<IScheduleRepository, ScheduleRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
         }
     }
 }

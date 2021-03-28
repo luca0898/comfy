@@ -20,6 +20,7 @@ namespace Comfy.Db.SQL
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new ScheduleMap());
+            modelBuilder.ApplyConfiguration(new UserMap());
         }
     }
 }

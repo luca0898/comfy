@@ -9,6 +9,7 @@ namespace Comfy.Registers.Contracts.Services
         public static void Load(IServiceCollection services)
         {
             services.AddTransient<IScheduleService, ScheduleService>();
+            services.AddTransient<IUserService, UserService>();
         }
     }
 }

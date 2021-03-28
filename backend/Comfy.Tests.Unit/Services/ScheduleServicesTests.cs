@@ -7,6 +7,7 @@ using Comfy.SystemObjects.Exceptions;
 using Comfy.SystemObjects.Interfaces;
 using FakeItEasy;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +19,7 @@ namespace Comfy.Tests.Unit
     {
         IScheduleService _service;
 
+        ICurrentSessionUser _currentSessionUser;
         ICacheProvider _cacheProvider;
         IScheduleRepository _repository;
         IUnitOfWorkFactory<UnitOfWork> _uow;
@@ -25,11 +27,14 @@ namespace Comfy.Tests.Unit
         [SetUp]
         public void SetUp()
         {
+            _currentSessionUser = A.Fake<ICurrentSessionUser>();
+            _currentSessionUser.Id = Guid.NewGuid().ToString("N");
+
             _cacheProvider = A.Fake<ICacheProvider>();
             _repository = A.Fake<IScheduleRepository>();
             _uow = A.Fake<IUnitOfWorkFactory<UnitOfWork>>();
 
-            _service = new ScheduleService(_cacheProvider, _repository, _uow);
+            _service = new ScheduleService(_currentSessionUser, _cacheProvider, _repository, _uow);
         }
 
         [Test]
@@ -38,7 +43,7 @@ namespace Comfy.Tests.Unit
             int skip = 0;
             int take = 10;
             var cancellationToken = new CancellationTokenSource().Token;
-            string key = $"Anonimo:{ typeof(Schedule).Name }:FindAll:Skip={skip}:Take={take}";
+            string key = $"{_currentSessionUser.Id}:{ typeof(Schedule).Name }:FindAll:Skip={skip}:Take={take}";
             IEnumerable<Schedule> expectedDataFromCache = null;
 
             A.CallTo(() => _cacheProvider.FindCacheAsync<IEnumerable<Schedule>>(key, cancellationToken))
@@ -55,7 +60,7 @@ namespace Comfy.Tests.Unit
         {
             int id = 0;
             var cancellationToken = new CancellationTokenSource().Token;
-            string key = $"Anonimo:{ typeof(Schedule).Name }:GetOne={id}";
+            string key = $"{_currentSessionUser.Id}:{ typeof(Schedule).Name }:GetOne={id}";
             Schedule expectedDataFromCache = null;
 
             A.CallTo(() => _cacheProvider.FindCacheAsync<Schedule>(key, cancellationToken))

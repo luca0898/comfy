@@ -1,7 +1,6 @@
 using Comfy.API.Middlewares;
 using Comfy.Middlewares;
 using Comfy.Registers;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

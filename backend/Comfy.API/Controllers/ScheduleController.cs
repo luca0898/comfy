@@ -4,7 +4,6 @@ using Comfy.Product.Entities;
 using Comfy.Product.ViewModel;
 using Comfy.SystemObjects.Attributes;
 using Comfy.SystemObjects.ViewModel;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
