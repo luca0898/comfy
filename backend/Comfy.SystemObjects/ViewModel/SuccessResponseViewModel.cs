@@ -2,7 +2,7 @@
 
 namespace Comfy.SystemObjects.ViewModel
 {
-    public class SuccessResponseViewModel<TData> : SuccessResponseViewModel
+    public class SuccessResponseViewModel<TData>
     {
         [DataMember(Name = "data")]
         public TData Data { get; set; }
@@ -11,11 +11,5 @@ namespace Comfy.SystemObjects.ViewModel
         {
             Data = data;
         }
-    }
-
-    public class SuccessResponseViewModel
-    {
-        [DataMember(Name = "message")]
-        public string Message { get; set; }
     }
 }
