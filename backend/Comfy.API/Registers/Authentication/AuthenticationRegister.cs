@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -92,10 +93,10 @@ namespace Comfy.Registers.Authentication
 
                     return new CurrentSessionUser
                     {
-                        Id = identity.FindFirst(c => c.Type == identifierSchema).Value,
-                        GivenName = identity.FindFirst(c => c.Type == givenNameSchema).Value,
-                        SurName = identity.FindFirst(c => c.Type == surNameSchema).Value,
-                        EmailAddress = identity.FindFirst(c => c.Type == emailAddressSchema).Value
+                        Id = identity.Claims.FirstOrDefault(c => c.Type == identifierSchema)?.Value,
+                        GivenName = identity.Claims.FirstOrDefault(c => c.Type == givenNameSchema)?.Value,
+                        SurName = identity.Claims.FirstOrDefault(c => c.Type == surNameSchema)?.Value,
+                        EmailAddress = identity.Claims.FirstOrDefault(c => c.Type == emailAddressSchema)?.Value
                     };
                 }
 
