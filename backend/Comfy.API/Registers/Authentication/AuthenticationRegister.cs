@@ -86,17 +86,14 @@ namespace Comfy.Registers.Authentication
                 {
                     ClaimsIdentity identity = (ClaimsIdentity)context.User.Identity;
 
-                    string identifierSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
-                    string givenNameSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname";
-                    string surNameSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname";
-                    string emailAddressSchema = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+                    string claimsSchemaPrefix = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims";
 
                     return new CurrentSessionUser
                     {
-                        Id = identity.Claims.FirstOrDefault(c => c.Type == identifierSchema)?.Value,
-                        GivenName = identity.Claims.FirstOrDefault(c => c.Type == givenNameSchema)?.Value,
-                        SurName = identity.Claims.FirstOrDefault(c => c.Type == surNameSchema)?.Value,
-                        EmailAddress = identity.Claims.FirstOrDefault(c => c.Type == emailAddressSchema)?.Value
+                        Id = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/nameidentifier")?.Value,
+                        GivenName = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/givenname")?.Value,
+                        SurName = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/surname")?.Value,
+                        EmailAddress = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/emailaddress")?.Value
                     };
                 }
 
