@@ -14,7 +14,7 @@ namespace Comfy.API.Validators
                 .WithMessage("Scheduling date must be over now");
 
             RuleFor(x => x.ProcedurePerformed)
-                .NotEmpty()
+                .NotNull()
                 .WithMessage("Procedure field is required");
         }
     }
