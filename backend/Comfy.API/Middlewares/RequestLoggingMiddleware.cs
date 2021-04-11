@@ -16,7 +16,7 @@ namespace Comfy.API.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
-            _logger.LogInformation($"Request on {context.Request.Scheme}://{context.Request.Host}{context.Request.Path}");
+            _logger.LogInformation($"Route '{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}' was requested");
             await _next(context);
         }
     }
