@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Comfy.Repository.Db.SQL.Migrations.Migrations
+namespace Comfy.Db.SQL.Migrations.Migrations
 {
     [DbContext(typeof(MigrationsContext))]
-    [Migration("20210328033136_MappingUsers")]
-    partial class MappingUsers
+    [Migration("20210411230121_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,7 +32,7 @@ namespace Comfy.Repository.Db.SQL.Migrations.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2021, 3, 28, 0, 31, 36, 711, DateTimeKind.Local).AddTicks(6565));
+                        .HasDefaultValue(new DateTime(2021, 4, 11, 20, 1, 21, 24, DateTimeKind.Local).AddTicks(753));
 
                     b.Property<bool>("Deleted")
                         .ValueGeneratedOnAdd()
@@ -47,43 +47,6 @@ namespace Comfy.Repository.Db.SQL.Migrations.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Schedule");
-                });
-
-            modelBuilder.Entity("Comfy.Product.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<bool>("Deleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("VARCHAR(32)");
-
-                    b.Property<string>("GivenName")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("VARCHAR(16)");
-
-                    b.Property<string>("IdentityReference")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("VARCHAR(36)");
-
-                    b.Property<string>("SurName")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("VARCHAR(16)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
                 });
 #pragma warning restore 612, 618
         }

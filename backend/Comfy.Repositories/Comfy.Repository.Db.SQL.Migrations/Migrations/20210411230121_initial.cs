@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Comfy.Repository.Db.SQL.Migrations.Migrations
+namespace Comfy.Db.SQL.Migrations.Migrations
 {
     public partial class initial : Migration
     {
@@ -15,11 +15,11 @@ namespace Comfy.Repository.Db.SQL.Migrations.Migrations
                 schema: "ComfyDb",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Deleted = table.Column<bool>(nullable: false, defaultValue: false),
-                    Date = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2021, 1, 10, 15, 20, 38, 760, DateTimeKind.Local).AddTicks(9294)),
-                    ProcedurePerformed = table.Column<bool>(nullable: false, defaultValue: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2021, 4, 11, 20, 1, 21, 24, DateTimeKind.Local).AddTicks(753)),
+                    ProcedurePerformed = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Deleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
