@@ -76,15 +76,16 @@ namespace Comfy.Controllers.Shared
         /// <summary>
         /// Update a entity
         /// </summary>
-        /// <param name="model">TEntity item</param>
+        /// <param name="id">Entity id</param>
+        /// <param name="model">New data</param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpPut, Route("")]
-        public async Task<IActionResult> UpdateAsync([FromBody] TInputViewModel model, CancellationToken cancellationToken)
+        [HttpPut, Route("{id}")]
+        public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] TInputViewModel model, CancellationToken cancellationToken)
         {
             TEntity entity = _mapper.Map<TEntity>(model);
 
-            TEntity updated = await _service.UpdateAsync(entity, cancellationToken);
+            TEntity updated = await _service.UpdateAsync(id, entity, cancellationToken);
 
             TOutputViewModel entityView = _mapper.Map<TOutputViewModel>(updated);
 

@@ -84,9 +84,9 @@ namespace Comfy.Services.Shared
             return newRecord;
         }
 
-        public override async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public override async Task<TEntity> UpdateAsync(int id, TEntity entity, CancellationToken cancellationToken = default)
         {
-            TEntity record = await base.UpdateAsync(entity, cancellationToken);
+            TEntity record = await base.UpdateAsync(id, entity, cancellationToken);
 
             if (record != null)
             {

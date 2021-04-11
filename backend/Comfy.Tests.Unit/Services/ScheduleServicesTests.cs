@@ -94,7 +94,7 @@ namespace Comfy.Tests.Unit
                 A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken))
                     .Returns(Task.FromResult<Schedule>(null));
 
-                await _service.UpdateAsync(entity, cancellationToken);
+                await _service.UpdateAsync(entity.Id, entity, cancellationToken);
 
                 A.CallTo(() => _repository.Update(entity, cancellationToken))
                     .MustNotHaveHappened();
@@ -121,7 +121,7 @@ namespace Comfy.Tests.Unit
             A.CallTo(() => _repository.FindOne(entity.Id, cancellationToken)).Returns(entity);
             A.CallTo(() => _repository.Update(entity, cancellationToken)).Returns(entity);
 
-            Schedule entityAfterUpdate = await _service.UpdateAsync(entity, cancellationToken);
+            Schedule entityAfterUpdate = await _service.UpdateAsync(entity.Id, entity, cancellationToken);
 
             A.CallTo(() => _repository.Update(entity, cancellationToken)).MustHaveHappenedOnceExactly();
         }

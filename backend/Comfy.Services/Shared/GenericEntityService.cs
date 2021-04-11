@@ -43,11 +43,11 @@ namespace Comfy.Services.Shared
             }
         }
 
-        public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        public virtual async Task<TEntity> UpdateAsync(int id, TEntity entity, CancellationToken cancellationToken = default)
         {
             using (var uow = _uow.Create())
             {
-                TEntity schedule = await _repository.FindOne(entity.Id, cancellationToken);
+                TEntity schedule = await _repository.FindOne(id, cancellationToken);
 
                 if (schedule != null && schedule.Id > 0)
                 {
@@ -58,7 +58,7 @@ namespace Comfy.Services.Shared
                 }
                 else
                 {
-                    string message = $"{typeof(TEntity).Name} {entity.Id} not found";
+                    string message = $"{typeof(TEntity).Name} {id} not found";
                     throw new ComfyApplicationException(message, HttpStatusCode.NotFound);
                 }
             }
