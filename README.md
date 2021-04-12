@@ -4,7 +4,7 @@ This project is designed to test my level of code design for an API
 
 ## Let's run
 
-1. Have sure you have installed the current [dotnet sdk](https://dotnet.microsoft.com/download)
+1. Install the [Dotnet SDK](https://dotnet.microsoft.com/download)
 2. You will need the docker installed in your environment, you can get help [here](https://docs.docker.com/get-docker/)
 3. Set up the development environment using the [docker-compose](docker-compose.yml) file. Here is the [official documentation](https://docs.docker.com/compose/)
 4. Setup Keycloak:
