@@ -16,18 +16,22 @@ namespace Comfy.Repository.Db.SQL.Migrations
         {
             ConfigurationBuilder builder = new ConfigurationBuilder();
 
-            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-            Console.WriteLine($"\nEnvironment Name:{environmentName}\n");
-
             var currentDirectory = Directory.GetCurrentDirectory();
 
-            builder
-                .AddJsonFile(Path.Combine(currentDirectory, $"appsettings.json"), true, true)
-                .AddJsonFile(Path.Combine(currentDirectory, $"appsettings.{environmentName}.json"), false, true)
-                .AddEnvironmentVariables();
+            builder.AddJsonFile(Path.Combine(currentDirectory, $"appsettings.json"), false, true);
 
-            IConfigurationRoot config = builder.Build();
+            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            if (string.IsNullOrEmpty(environmentName) == false){
+                
+                Console.WriteLine($"\nEnvironment Name:{environmentName}\n");
+
+                builder.AddJsonFile(Path.Combine(currentDirectory, $"appsettings.{environmentName}.json"), true, true);
+            }
+
+            IConfigurationRoot config = builder
+                .AddEnvironmentVariables()
+                .Build();
 
             optionsBuilder.UseSqlServer(config.GetConnectionString("comfyDbSqlConnectionString"));
 
