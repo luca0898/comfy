@@ -34,53 +34,46 @@ namespace Comfy.Services.Shared
 
         public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            using (var uow = _uow.Create())
-            {
-                TEntity result = await _repository.Create(entity, cancellationToken);
-                await uow.CommitAsync(cancellationToken);
+            using IUnitOfWork uow = _uow.Create();
 
-                return result;
-            }
+            TEntity result = await _repository.Create(entity, cancellationToken);
+
+            await uow.CommitAsync(cancellationToken);
+
+            return result;
         }
 
         public virtual async Task<TEntity> UpdateAsync(int id, TEntity entity, CancellationToken cancellationToken = default)
         {
-            using (var uow = _uow.Create())
+            using IUnitOfWork uow = _uow.Create();
+
+            TEntity existingEntity = await _repository.FindOne(id, cancellationToken);
+
+            if (existingEntity == null || existingEntity.Id <= 0)
             {
-                TEntity schedule = await _repository.FindOne(id, cancellationToken);
-
-                if (schedule != null && schedule.Id > 0)
-                {
-                    TEntity result = await _repository.Update(entity, cancellationToken);
-                    await uow.CommitAsync(cancellationToken);
-
-                    return result;
-                }
-                else
-                {
-                    string message = $"{typeof(TEntity).Name} {id} not found";
-                    throw new ComfyApplicationException(message, HttpStatusCode.NotFound);
-                }
+                throw new ComfyApplicationException($"{typeof(TEntity).Name} {id} not found", HttpStatusCode.NotFound);
             }
+
+            TEntity result = await _repository.Update(entity, cancellationToken);
+
+            await uow.CommitAsync(cancellationToken);
+
+            return result;
         }
 
         public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
         {
-            using (var uow = _uow.Create())
-            {
-                TEntity entity = await _repository.FindOne(id, cancellationToken);
+            using IUnitOfWork uow = _uow.Create();
 
-                if (entity != null && entity.Id > 0)
-                {
-                    await _repository.SoftDelete(entity, cancellationToken);
-                    await uow.CommitAsync(cancellationToken);
-                }
-                else
-                {
-                    string message = $"{typeof(TEntity).Name} {id} not found";
-                    throw new ComfyApplicationException(message, HttpStatusCode.NotFound);
-                }
+            TEntity entity = await _repository.FindOne(id, cancellationToken);
+
+            if (entity == null || entity.Id <= 0)
+            {
+                throw new ComfyApplicationException($"{typeof(TEntity).Name} {id} not found", HttpStatusCode.NotFound);
             }
+
+            await _repository.SoftDelete(entity, cancellationToken);
+            await uow.CommitAsync(cancellationToken);
         }
     }
 }
