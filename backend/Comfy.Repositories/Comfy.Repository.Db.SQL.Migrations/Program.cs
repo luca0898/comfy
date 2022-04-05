@@ -1,4 +1,4 @@
-﻿using AutoMapper.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Comfy.Repository.Db.SQL.Migrations
 {
