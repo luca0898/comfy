@@ -11,7 +11,7 @@ namespace Comfy.Db.SQL.Migrations.Migrations
 {
     [DbContext(typeof(MigrationsContext))]
     [Migration("20210411230121_initial")]
-    partial class initial
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

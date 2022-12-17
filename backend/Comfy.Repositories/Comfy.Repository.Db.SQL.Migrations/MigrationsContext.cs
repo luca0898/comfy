@@ -22,8 +22,9 @@ namespace Comfy.Repository.Db.SQL.Migrations
 
             string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-            if (string.IsNullOrEmpty(environmentName) == false){
-                
+            if (string.IsNullOrEmpty(environmentName) == false)
+            {
+
                 Console.WriteLine($"\nEnvironment Name:{environmentName}\n");
 
                 builder.AddJsonFile(Path.Combine(currentDirectory, $"appsettings.{environmentName}.json"), true, true);

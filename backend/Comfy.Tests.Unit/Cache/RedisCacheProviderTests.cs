@@ -31,7 +31,7 @@ namespace Comfy.Tests.Unit.Cache
         [Test]
         public async Task CreateAsync_ShouldCreateCacheAsync()
         {
-            string key = $"Anonimo:{ typeof(MyStubClass).Name }:2021-03-19:";
+            string key = $"Anonimo:{typeof(MyStubClass).Name}:2021-03-19:";
             MyStubClass myStubClass = A.Fake<MyStubClass>();
             string dataAsJson = JsonConvert.SerializeObject(key);
             byte[] dataAsBytesArray = Encoding.UTF8.GetBytes(dataAsJson);
@@ -60,7 +60,7 @@ namespace Comfy.Tests.Unit.Cache
         [Test]
         public async Task FindCacheAsync_ShouldSearchForCache_UsingTheCacheKeyAsync()
         {
-            string key = $"Anonimo:{ typeof(MyStubClass).Name }:2021-03-19:";
+            string key = $"Anonimo:{typeof(MyStubClass).Name}:2021-03-19:";
 
             await _cacheProvider.FindCacheAsync<MyStubClass>(key);
         }
@@ -68,7 +68,7 @@ namespace Comfy.Tests.Unit.Cache
         [Test]
         public async Task RemoveAsync_ShouldRemoveCache_UsingTheCacheKeyAsync()
         {
-            string key = $"Anonimo:{ typeof(MyStubClass).Name }:2021-03-19:";
+            string key = $"Anonimo:{typeof(MyStubClass).Name}:2021-03-19:";
 
             await _cacheProvider.RemoveAsync(key);
         }
@@ -76,7 +76,7 @@ namespace Comfy.Tests.Unit.Cache
         [Test]
         public async Task InvalidateCacheAsync_ShouldRemoveEachCacheKey_InTheSummaryAsync()
         {
-            string key = $"Summary:{ typeof(MyStubClass).Name }";
+            string key = $"Summary:{typeof(MyStubClass).Name}";
 
             await _cacheProvider.InvalidateCacheAsync<MyStubClass>();
         }

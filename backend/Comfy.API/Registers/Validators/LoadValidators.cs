@@ -1,5 +1,6 @@
 using Comfy.API.Middlewares;
-using FluentValidation.AspNetCore;
+using Comfy.API.Validators;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Comfy.Registers.Validators
@@ -8,15 +9,8 @@ namespace Comfy.Registers.Validators
     {
         public static void Load(IServiceCollection services)
         {
-            services
-                .AddMvc(options =>
-                {
-                    options.Filters.Add(new ModelValidationFilter());
-                })
-                .AddFluentValidation(setup =>
-                {
-                    setup.RegisterValidatorsFromAssemblyContaining<Startup>();
-                });
+            services.AddMvc(options => options.Filters.Add(new ModelValidationFilter()));
+            services.AddValidatorsFromAssemblyContaining<ScheduleValidator>();
         }
     }
 }

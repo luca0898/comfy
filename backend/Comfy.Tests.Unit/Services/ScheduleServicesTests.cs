@@ -43,7 +43,7 @@ namespace Comfy.Tests.Unit
             int skip = 0;
             int take = 10;
             var cancellationToken = new CancellationTokenSource().Token;
-            string key = $"{_currentSessionUser.Id}:{ typeof(Schedule).Name }:FindAll:Skip={skip}:Take={take}";
+            string key = $"{_currentSessionUser.Id}:{typeof(Schedule).Name}:FindAll:Skip={skip}:Take={take}";
             IEnumerable<Schedule> expectedDataFromCache = null;
 
             A.CallTo(() => _cacheProvider.FindCacheAsync<IEnumerable<Schedule>>(key, cancellationToken))
@@ -60,7 +60,7 @@ namespace Comfy.Tests.Unit
         {
             int id = 0;
             var cancellationToken = new CancellationTokenSource().Token;
-            string key = $"{_currentSessionUser.Id}:{ typeof(Schedule).Name }:GetOne={id}";
+            string key = $"{_currentSessionUser.Id}:{typeof(Schedule).Name}:GetOne={id}";
             Schedule expectedDataFromCache = null;
 
             A.CallTo(() => _cacheProvider.FindCacheAsync<Schedule>(key, cancellationToken))

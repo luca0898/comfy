@@ -64,7 +64,7 @@ namespace Comfy.Cache.Redis
 
         public async Task InvalidateCacheAsync<T>()
         {
-            string summary = $"Summary:{ typeof(T).Name }";
+            string summary = $"Summary:{typeof(T).Name}";
 
             string summaryAsString = await _cache.GetStringAsync(summary);
 
@@ -120,11 +120,11 @@ namespace Comfy.Cache.Redis
             Type type = typeof(T);
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
             {
-                return $"Summary:{ type.GetGenericArguments()[0].Name }";
+                return $"Summary:{type.GetGenericArguments()[0].Name}";
             }
             else
             {
-                return $"Summary:{ type.Name }";
+                return $"Summary:{type.Name}";
             }
         }
     }

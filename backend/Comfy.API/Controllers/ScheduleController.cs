@@ -12,7 +12,7 @@ namespace Comfy.Controllers
     public class ScheduleController : BaseController<Schedule, ScheduleViewModel, ScheduleViewModel>
     {
         public ScheduleController(
-            IScheduleService scheduleService, 
+            IScheduleService scheduleService,
             IMapper mapper)
             : base(scheduleService, mapper)
         {
