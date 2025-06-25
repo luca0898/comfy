@@ -111,7 +111,7 @@ namespace Comfy.Cache.Redis
 
             await _cache.SetAsync(summary, Encoding.UTF8.GetBytes(summaryAsJson), new DistributedCacheEntryOptions
             {
-                SlidingExpiration = DateTime.Now.AddHours(1).TimeOfDay
+                SlidingExpiration = TimeSpan.FromHours(1)
             });
         }
 
