@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Api\Api.csproj" />
+  <Project Path="Application\Application.csproj" />
+  <Project Path="Database\Database.csproj" />
+  <Project Path="CrossCutting\CrossCutting.csproj" />
+  <Project Path="Domain\Domain.csproj" />
+  <Project Path="Tests\Tests.csproj" />
+</Solution>

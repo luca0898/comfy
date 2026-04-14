@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <UserSecretsId>aspnet-Comfy-84F52533-9253-4024-B90B-66AEA6354152</UserSecretsId>
+    <RootNamespace>Comfy.API</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,11 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Comfy.Repositories\Comfy.Repository.Cache.Redis\Comfy.Cache.Redis.csproj" />
-    <ProjectReference Include="..\Comfy.Repositories\Comfy.Repository.Db.SQL\Comfy.Db.SQL.csproj" />
-    <ProjectReference Include="..\Comfy.Product\Comfy.Product.csproj" />
-    <ProjectReference Include="..\Comfy.Services\Comfy.Services.csproj" />
-    <ProjectReference Include="..\Comfy.SystemObjects\Comfy.SystemObjects.csproj" />
+    <ProjectReference Include="..\Database\Database.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\CrossCutting\CrossCutting.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
