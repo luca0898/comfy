@@ -1,23 +1,31 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
-using System.IO;
+using Api.Middlewares;
+using Scalar.AspNetCore;
 
-namespace Comfy
+namespace Api;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddHealthChecks();
+        builder.Services.AddAuthorization();
+        builder.Services.AddOpenApi();
+
+        var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
         {
-            CreateHostBuilder(args).Build().Run();
+            app.MapOpenApi();
+            app.MapScalarApiReference();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.CaptureStartupErrors(true)
-                        .UseContentRoot(Directory.GetCurrentDirectory())
-                        .UseStartup<Startup>();
-                });
+        app.UseMiddleware<RequestLoggingMiddleware>();
+
+        app.UseHttpsRedirection();
+        app.ConfigureExceptionHandler();
+        app.UseAuthorization();
+        app.Run();
     }
 }

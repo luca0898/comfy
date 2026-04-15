@@ -1,20 +1,12 @@
-﻿using Comfy.Product.Contracts.Repositories;
-using Comfy.Product.Contracts.Services;
-using Comfy.Product.Entities;
-using Comfy.Services.Shared;
-using Comfy.SystemObjects;
-using Comfy.SystemObjects.Interfaces;
+﻿using Application.Shared;
+using CrossCutting.Interfaces;
+using Domain.Contracts.Repositories;
+using Domain.Contracts.Services;
+using Domain.Entities;
 
-namespace Comfy.Service
-{
-    public class ScheduleService : GenericCachedEntityService<Schedule>, IScheduleService
-    {
-        public ScheduleService(
-            ICurrentSessionUser currentSessionUser,
-            ICacheProvider cacheProvider,
-            IScheduleRepository scheduleRepository,
-            IUnitOfWorkFactory<UnitOfWork> uow) : base(currentSessionUser, cacheProvider, scheduleRepository, uow)
-        {
-        }
-    }
-}
+namespace Application;
+
+public class ScheduleService(
+    IScheduleRepository scheduleRepository,
+    IUnitOfWorkFactory uow)
+    : GenericEntityService<Schedule>(scheduleRepository, uow), IScheduleService;

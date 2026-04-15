@@ -1,11 +1,10 @@
-namespace Comfy.SystemObjects.Entities
+namespace CrossCutting.Entities.Authentication;
+
+public sealed class KeycloakSettings
 {
-    public class KeycloakSettings
-    {
-        public string Issuer { get; set; }
-        public string Audience { get; set; }
-        public string Authority { get; set; }
-        public string BaseUrl { get; set; }
-        public string Realm { get; set; }
-    }
+    public required string Issuer { get; set; }
+    public required string Audience { get; set; }
+    public required string Authority { get; set; }
+    public required string BaseUrl { get; set; }
+    public required string Realm { get; set; }
 }

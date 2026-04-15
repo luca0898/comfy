@@ -1,25 +1,9 @@
-﻿using Comfy.Db.SQL.Mappers;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+﻿namespace Database;
 
-namespace Comfy.Db.SQL
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
 {
-    public class ApplicationDbContext : DbContext
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public ApplicationDbContext Context => this;
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Ignore<Claim>();
-            modelBuilder.HasDefaultSchema("ComfyDb");
-
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.ApplyConfiguration(new ScheduleMap());
-        }
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
     }
 }

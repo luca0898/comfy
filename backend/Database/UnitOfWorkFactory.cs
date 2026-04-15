@@ -1,25 +1,18 @@
-﻿using Comfy.SystemObjects;
-using Comfy.SystemObjects.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Data;
+﻿using System.Data;
+using CrossCutting;
+using CrossCutting.Interfaces;
 
-namespace Comfy.Db.SQL
+namespace Database;
+
+public class UnitOfWorkFactory(DbContext dbContext) : IUnitOfWorkFactory
 {
-    public class UnitOfWorkFactory : IUnitOfWorkFactory<UnitOfWork>
+    public IUnitOfWork Create()
     {
-        private readonly DbContext _dbContext;
-        public UnitOfWorkFactory(DbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-        public IUnitOfWork Create()
-        {
-            return new UnitOfWork(_dbContext);
-        }
+        return new UnitOfWork(dbContext);
+    }
 
-        public IUnitOfWork Create(IsolationLevel isolationLevel)
-        {
-            return new UnitOfWork(_dbContext, isolationLevel);
-        }
+    public IUnitOfWork Create(IsolationLevel isolationLevel)
+    {
+        return new UnitOfWork(dbContext);
     }
 }

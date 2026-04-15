@@ -1,12 +1,6 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿namespace CrossCutting.Interfaces;
 
-namespace Comfy.SystemObjects.Interfaces
+public interface IUnitOfWork : IDisposable
 {
-    public interface IUnitOfWork : IDisposable
-    {
-        void Commit();
-        Task CommitAsync(CancellationToken cancellationToken);
-    }
+    Task CommitAsync(CancellationToken cancellationToken);
 }

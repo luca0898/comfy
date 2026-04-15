@@ -1,108 +1,73 @@
 ﻿using AutoMapper;
-using Comfy.Product.Contracts.Services.Shared;
-using Comfy.Product.Contracts.Shared;
-using Comfy.SystemObjects.ViewModel;
+using CrossCutting.ViewModel;
+using Domain.Contracts.Services.Shared;
+using Domain.Contracts.Shared;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Comfy.Controllers.Shared
+namespace Api.Controllers.Shared;
+
+public abstract class BaseController<TEntity, TInputViewModel, TOutputViewModel>(
+    IGenericEntityService<TEntity> service,
+    IMapper mapper) : Controller
+    where TEntity : IEntity
 {
-    public abstract class BaseController<TEntity, TInputViewModel, TOutputViewModel> : Controller where TEntity : IEntity
+    [HttpGet("")]
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery] int skip,
+        [FromQuery] int take,
+        CancellationToken cancellationToken)
     {
-        private readonly IMapper _mapper;
-        private readonly IGenericEntityService<TEntity> _service;
+        take = take <= 0 ? 50 : take;
 
-        public BaseController(IGenericEntityService<TEntity> service, IMapper mapper)
-        {
-            _service = service;
-            _mapper = mapper;
-        }
+        var entity = await service.FindAllAsync(skip, take, cancellationToken);
 
-        /// <summary>
-        /// Get All entities
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet, Route("")]
-        [SwaggerOperation(OperationId = "{entity}GetAll")]
-        public async Task<IActionResult> GetAllAsync([FromQuery] int skip, [FromQuery] int take, CancellationToken cancellationToken)
-        {
-            take = (take <= 0) ? 50 : take;
+        var entityView = mapper.Map<IEnumerable<TOutputViewModel>>(entity);
 
-            IEnumerable<TEntity> entity = await _service.FindAllAsync(cancellationToken, skip, take);
+        return Ok(new SuccessResponseViewModel<IEnumerable<TOutputViewModel>>(entityView));
+    }
 
-            IEnumerable<TOutputViewModel> entityView = _mapper.Map<IEnumerable<TOutputViewModel>>(entity);
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
+    {
+        var entity = await service.GetOneAsync(id, cancellationToken);
 
-            return Ok(new SuccessResponseViewModel<IEnumerable<TOutputViewModel>>(entityView));
-        }
+        var entityView = mapper.Map<TOutputViewModel>(entity);
 
-        /// <summary>
-        /// Get one entity
-        /// </summary>
-        /// <param name="id">entity identifier</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns>The entity record</returns>
-        [HttpGet, Route("{id}")]
-        [SwaggerOperation(OperationId = "{entity}GetById")]
-        public async Task<IActionResult> GetAsync(int id, CancellationToken cancellationToken)
-        {
-            TEntity entity = await _service.GetOneAsync(id, cancellationToken);
+        return Ok(new SuccessResponseViewModel<TOutputViewModel>(entityView));
+    }
 
-            TOutputViewModel entityView = _mapper.Map<TOutputViewModel>(entity);
+    [HttpPost("")]
+    public async Task<IActionResult> CreateAsync([FromBody] TInputViewModel model, CancellationToken cancellationToken)
+    {
+        var entity = mapper.Map<TEntity>(model);
 
-            return Ok(new SuccessResponseViewModel<TOutputViewModel>(entityView));
-        }
+        var newly = await service.CreateAsync(entity, cancellationToken);
 
-        /// <summary>
-        /// Create a new entity
-        /// </summary>
-        /// <param name="model">TEntity item</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPost, Route("")]
-        public async Task<IActionResult> CreateAsync([FromBody] TInputViewModel model, CancellationToken cancellationToken)
-        {
-            TEntity entity = _mapper.Map<TEntity>(model);
+        var result = mapper.Map<TOutputViewModel>(newly);
 
-            TEntity newly = await _service.CreateAsync(entity, cancellationToken);
+        return Ok(new SuccessResponseViewModel<TOutputViewModel>(result));
+    }
 
-            TOutputViewModel result = _mapper.Map<TOutputViewModel>(newly);
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateAsync(
+        [FromRoute] int id,
+        [FromBody] TInputViewModel model,
+        CancellationToken cancellationToken)
+    {
+        var entity = mapper.Map<TEntity>(model);
 
-            return Ok(new SuccessResponseViewModel<TOutputViewModel>(result));
-        }
+        var updated = await service.UpdateAsync(id, entity, cancellationToken);
 
-        /// <summary>
-        /// Update a entity
-        /// </summary>
-        /// <param name="id">Entity id</param>
-        /// <param name="model">New data</param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPut, Route("{id}")]
-        public async Task<IActionResult> UpdateAsync([FromRoute] int id, [FromBody] TInputViewModel model, CancellationToken cancellationToken)
-        {
-            TEntity entity = _mapper.Map<TEntity>(model);
+        var entityView = mapper.Map<TOutputViewModel>(updated);
 
-            TEntity updated = await _service.UpdateAsync(id, entity, cancellationToken);
+        return Ok(new SuccessResponseViewModel<TOutputViewModel>(entityView));
+    }
 
-            TOutputViewModel entityView = _mapper.Map<TOutputViewModel>(updated);
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
+    {
+        await service.DeleteAsync(id, cancellationToken);
 
-            return Ok(new SuccessResponseViewModel<TOutputViewModel>(entityView));
-        }
-
-        /// <summary>
-        /// Delete a entity
-        /// </summary>
-        /// <param name="id">entity key</param>
-        /// <param name="cancellationToken"></param>
-        [HttpDelete, Route("{id}")]
-        public async Task<IActionResult> DeleteAsync([FromRoute] int id, CancellationToken cancellationToken)
-        {
-            await _service.DeleteAsync(id, cancellationToken);
-
-            return Ok();
-        }
+        return Ok();
     }
 }

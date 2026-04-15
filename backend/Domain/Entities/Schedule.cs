@@ -1,12 +1,9 @@
-﻿using Comfy.Product.Entities.Shared;
-using System;
+﻿using Domain.Entities.Shared;
 
-namespace Comfy.Product.Entities
+namespace Domain.Entities;
+
+public class Schedule : Entity
 {
-    public class Schedule : Entity
-    {
-        public DateTime Date { get; set; }
-
-        public bool ProcedurePerformed { get; set; }
-    }
+    public DateTime Date { get; init; }
+    public bool ProcedurePerformed { get; init; }
 }

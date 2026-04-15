@@ -1,15 +1,13 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Comfy.SystemObjects.ViewModel
-{
-    public class SuccessResponseViewModel<TData>
-    {
-        [DataMember(Name = "data")]
-        public TData Data { get; set; }
+namespace CrossCutting.ViewModel;
 
-        public SuccessResponseViewModel(TData data)
-        {
-            Data = data;
-        }
+public class SuccessResponseViewModel<TData>
+{
+    public SuccessResponseViewModel(TData data)
+    {
+        Data = data;
     }
+
+    [DataMember(Name = "data")] public TData Data { get; set; }
 }

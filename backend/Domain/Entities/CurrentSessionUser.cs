@@ -1,12 +1,11 @@
-﻿using Comfy.Product.Contracts.Services;
+﻿using Domain.Contracts.Services;
 
-namespace Comfy.Product.Entities
+namespace Domain.Entities;
+
+public class CurrentSessionUser : ICurrentSessionUser
 {
-    public class CurrentSessionUser : ICurrentSessionUser
-    {
-        public string Id { get; set; }
-        public string GivenName { get; set; }
-        public string SurName { get; set; }
-        public string EmailAddress { get; set; }
-    }
+    public string? Id { get; init; }
+    public string? GivenName { get; init; }
+    public string? SurName { get; init; }
+    public string? EmailAddress { get; init; }
 }

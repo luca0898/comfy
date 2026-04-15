@@ -38,7 +38,7 @@ services:
     depends_on:
       - mssql
       - mssqlscripts
-      
+
 volumes:
   mssql:
   redis:

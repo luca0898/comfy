@@ -1,22 +1,18 @@
-﻿using Newtonsoft.Json;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Text.Json;
 
-namespace Comfy.SystemObjects.ViewModel
+namespace CrossCutting.ViewModel;
+
+public class ErrorResponseViewModel
 {
-    public class ErrorResponseViewModel
+    [DataMember(Name = "message")] public required string Message { get; set; }
+
+    [DataMember(Name = "errorCode")] public required string ErrorCode { get; set; }
+
+    [DataMember(Name = "errors")] public required object Errors { get; set; }
+
+    public override string ToString()
     {
-        [DataMember(Name = "message")]
-        public string Message { get; set; }
-
-        [DataMember(Name = "errorCode")]
-        public string ErrorCode { get; set; }
-
-        [DataMember(Name = "errors")]
-        public object Errors { get; set; }
-
-        public override string ToString()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
+        return JsonSerializer.Serialize(this);
     }
 }

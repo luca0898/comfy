@@ -1,16 +1,14 @@
-using Comfy.API.Middlewares;
-using Comfy.API.Validators;
+using Api.Filters;
+using Api.Validators;
 using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Comfy.Registers.Validators
+namespace Api.Registers.Validators;
+
+public static class LoadValidators
 {
-    public static class LoadValidators
+    public static void Load(IServiceCollection services)
     {
-        public static void Load(IServiceCollection services)
-        {
-            services.AddMvc(options => options.Filters.Add(new ModelValidationFilter()));
-            services.AddValidatorsFromAssemblyContaining<ScheduleValidator>();
-        }
+        services.AddMvc(options => options.Filters.Add(new ModelValidationFilter()));
+        services.AddValidatorsFromAssemblyContaining<ScheduleValidator>();
     }
 }

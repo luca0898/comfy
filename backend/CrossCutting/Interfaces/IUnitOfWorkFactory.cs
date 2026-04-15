@@ -1,10 +1,6 @@
-﻿using System.Data;
+﻿namespace CrossCutting.Interfaces;
 
-namespace Comfy.SystemObjects.Interfaces
+public interface IUnitOfWorkFactory
 {
-    public interface IUnitOfWorkFactory<TUnitOfWork> where TUnitOfWork : IUnitOfWork
-    {
-        IUnitOfWork Create();
-        IUnitOfWork Create(IsolationLevel isolationLevel);
-    }
+    IUnitOfWork Create();
 }

@@ -1,45 +1,42 @@
-﻿using Comfy.SystemObjects.ViewModel;
+﻿using System.Net;
+using CrossCutting.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 
-namespace Comfy.API.Middlewares
+namespace Api.Filters;
+
+public class ModelValidationFilter : IActionFilter
 {
-    public class ModelValidationFilter : IActionFilter
+    public void OnActionExecuted(ActionExecutedContext context)
     {
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-        }
+    }
 
-        public void OnActionExecuting(ActionExecutingContext context)
+    public void OnActionExecuting(ActionExecutingContext context)
+    {
+        if (!context.ModelState.IsValid)
         {
-            if (context.ModelState.IsValid == false)
+            var errors = new List<object>();
+
+            for (var errorItemIndex = 0; errorItemIndex < context.ModelState.Keys.Count(); errorItemIndex++)
             {
-                var errors = new List<object>();
+                var errorKey = context.ModelState.Keys.ToList()[errorItemIndex];
+                var errorValue = context.ModelState.Values.ToList()[errorItemIndex];
 
-                for (int errorItemIndex = 0; errorItemIndex < context.ModelState.Keys.Count(); errorItemIndex++)
+                errors.Add(new
                 {
-                    var errorKey = context.ModelState.Keys.ToList()[errorItemIndex];
-                    var errorValue = context.ModelState.Values.ToList()[errorItemIndex];
-
-                    errors.Add(new
-                    {
-                        Field = char.ToLowerInvariant(errorKey[0]) + errorKey.Substring(1),
-                        Reasons = errorValue.Errors.Select(error => error.ErrorMessage)
-                    });
-                }
-
-                ErrorResponseViewModel errorResponse = new ErrorResponseViewModel
-                {
-                    ErrorCode = HttpStatusCode.BadRequest.ToString(),
-                    Message = "Model is invalid",
-                    Errors = errors
-                };
-
-                context.Result = new BadRequestObjectResult(errorResponse);
+                    Field = char.ToLowerInvariant(errorKey[0]) + errorKey.Substring(1),
+                    Reasons = errorValue.Errors.Select(error => error.ErrorMessage)
+                });
             }
+
+            var errorResponse = new ErrorResponseViewModel
+            {
+                ErrorCode = HttpStatusCode.BadRequest.ToString(),
+                Message = "Model is invalid",
+                Errors = errors
+            };
+
+            context.Result = new BadRequestObjectResult(errorResponse);
         }
     }
 }

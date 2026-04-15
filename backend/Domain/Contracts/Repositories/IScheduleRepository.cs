@@ -1,9 +1,8 @@
-﻿using Comfy.Product.Contracts.Repositories.Shared;
-using Comfy.Product.Entities;
+﻿using Domain.Contracts.Repositories.Shared;
+using Domain.Entities;
 
-namespace Comfy.Product.Contracts.Repositories
+namespace Domain.Contracts.Repositories;
+
+public interface IScheduleRepository : IGenericRepository<Schedule>
 {
-    public interface IScheduleRepository : IGenericRepository<Schedule>
-    {
-    }
 }

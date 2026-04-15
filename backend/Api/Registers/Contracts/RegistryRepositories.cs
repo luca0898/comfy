@@ -1,15 +1,12 @@
-﻿using Comfy.Db.SQL.Repositories;
-using Comfy.Product.Contracts.Repositories;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Database.Repositories;
+using Domain.Contracts.Repositories;
 
-namespace Comfy.Registers.Contracts.Repositories
+namespace Api.Registers.Contracts;
+
+public static class RegistryRepositories
 {
-    public class RegistryRepositories
+    public static void Load(IServiceCollection services)
     {
-        public static void Load(IServiceCollection services)
-        {
-            services.AddTransient<IScheduleRepository, ScheduleRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-        }
+        services.AddTransient<IScheduleRepository, ScheduleRepository>();
     }
 }

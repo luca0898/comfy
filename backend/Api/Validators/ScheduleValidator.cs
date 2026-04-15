@@ -1,21 +1,19 @@
-﻿using Comfy.Product.ViewModel;
+﻿using Domain.ViewModel;
 using FluentValidation;
-using System;
 
-namespace Comfy.API.Validators
+namespace Api.Validators;
+
+public class ScheduleValidator : AbstractValidator<ScheduleViewModel>
 {
-    public class ScheduleValidator : AbstractValidator<ScheduleViewModel>
+    public ScheduleValidator()
     {
-        public ScheduleValidator()
-        {
-            RuleFor(x => x.Date)
-                .NotNull()
-                .GreaterThan(DateTime.Now)
-                .WithMessage("Scheduling date must be over now");
+        RuleFor(x => x.Date)
+            .NotNull()
+            .GreaterThan(DateTime.Now)
+            .WithMessage("Scheduling date must be over now");
 
-            RuleFor(x => x.ProcedurePerformed)
-                .NotNull()
-                .WithMessage("Procedure field is required");
-        }
+        RuleFor(x => x.ProcedurePerformed)
+            .NotNull()
+            .WithMessage("Procedure field is required");
     }
 }

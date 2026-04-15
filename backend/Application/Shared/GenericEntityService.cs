@@ -1,79 +1,66 @@
-﻿using Comfy.Product.Contracts.Repositories.Shared;
-using Comfy.Product.Contracts.Services.Shared;
-using Comfy.Product.Contracts.Shared;
-using Comfy.SystemObjects;
-using Comfy.SystemObjects.Exceptions;
-using Comfy.SystemObjects.Interfaces;
-using System.Collections.Generic;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using CrossCutting.Exceptions;
+using CrossCutting.Interfaces;
+using Domain.Contracts.Repositories.Shared;
+using Domain.Contracts.Services.Shared;
+using Domain.Contracts.Shared;
 
-namespace Comfy.Services.Shared
+namespace Application.Shared;
+
+public abstract class GenericEntityService<TEntity>(
+    IGenericRepository<TEntity> repository,
+    IUnitOfWorkFactory unitOfWorkFactory)
+    : IGenericEntityService<TEntity>
+    where TEntity : class, IEntity
 {
-    public abstract class GenericEntityService<TEntity> : IGenericEntityService<TEntity> where TEntity : class, IEntity
+    public virtual async Task<IList<TEntity>> FindAllAsync(int skip = 0, int take = 20,
+        CancellationToken cancellationToken = default)
     {
-        protected readonly IUnitOfWorkFactory<UnitOfWork> _uow;
-        protected readonly IGenericRepository<TEntity> _repository;
+        return await repository.FindAll(skip, take, cancellationToken);
+    }
 
-        public GenericEntityService(IGenericRepository<TEntity> TEntityRepository, IUnitOfWorkFactory<UnitOfWork> uow)
-        {
-            _repository = TEntityRepository;
-            _uow = uow;
-        }
+    public virtual async Task<TEntity?> GetOneAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await repository.FindOne(id, cancellationToken);
+    }
 
-        public virtual async Task<IEnumerable<TEntity>> FindAllAsync(CancellationToken cancellationToken = default, int skip = 0, int take = 20)
-        {
-            return await _repository.FindAll(cancellationToken, skip, take);
-        }
+    public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
+    {
+        using var uow = unitOfWorkFactory.Create();
 
-        public virtual async Task<TEntity> GetOneAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return await _repository.FindOne(id, cancellationToken);
-        }
+        var result = await repository.Create(entity, cancellationToken);
 
-        public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
-        {
-            using IUnitOfWork uow = _uow.Create();
+        await uow.CommitAsync(cancellationToken);
 
-            TEntity result = await _repository.Create(entity, cancellationToken);
+        return result;
+    }
 
-            await uow.CommitAsync(cancellationToken);
+    public virtual async Task<TEntity?> UpdateAsync(int id, TEntity entity,
+        CancellationToken cancellationToken = default)
+    {
+        using var uow = unitOfWorkFactory.Create();
 
-            return result;
-        }
+        var existingEntity = await repository.FindOne(id, cancellationToken);
 
-        public virtual async Task<TEntity> UpdateAsync(int id, TEntity entity, CancellationToken cancellationToken = default)
-        {
-            using IUnitOfWork uow = _uow.Create();
+        if (existingEntity == null || existingEntity.Id <= 0)
+            throw new ComfyApplicationException($"{typeof(TEntity).Name} {id} not found");
 
-            TEntity existingEntity = await _repository.FindOne(id, cancellationToken);
+        var result = await repository.Update(entity, cancellationToken);
 
-            if (existingEntity == null || existingEntity.Id <= 0)
-            {
-                throw new ComfyApplicationException($"{typeof(TEntity).Name} {id} not found", HttpStatusCode.NotFound);
-            }
+        await uow.CommitAsync(cancellationToken);
 
-            TEntity result = await _repository.Update(entity, cancellationToken);
+        return result;
+    }
 
-            await uow.CommitAsync(cancellationToken);
+    public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+    {
+        using var uow = unitOfWorkFactory.Create();
 
-            return result;
-        }
+        var entity = await repository.FindOne(id, cancellationToken);
 
-        public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
-        {
-            using IUnitOfWork uow = _uow.Create();
+        if (entity == null)
+            throw new ComfyApplicationException($"{typeof(TEntity).Name} {id} not found");
 
-            TEntity entity = await _repository.FindOne(id, cancellationToken);
-
-            if (entity == null || entity.Id <= 0)
-            {
-                throw new ComfyApplicationException($"{typeof(TEntity).Name} {id} not found", HttpStatusCode.NotFound);
-            }
-
-            await _repository.SoftDelete(entity, cancellationToken);
-            await uow.CommitAsync(cancellationToken);
-        }
+        await repository.SoftDelete(entity, cancellationToken);
+        await uow.CommitAsync(cancellationToken);
     }
 }

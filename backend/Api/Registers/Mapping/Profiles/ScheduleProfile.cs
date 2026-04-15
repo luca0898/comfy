@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
-using Comfy.Product.Entities;
-using Comfy.Product.ViewModel;
+using Domain.Entities;
+using Domain.ViewModel;
 
-namespace Comfy.Registers.Mapping
+namespace Api.Registers.Mapping.Profiles;
+
+public class ScheduleProfile : Profile
 {
-    public class ScheduleProfile : Profile
+    public ScheduleProfile()
     {
-        public ScheduleProfile()
-        {
-            CreateMap<Schedule, ScheduleViewModel>().ReverseMap();
-        }
+        CreateMap<Schedule, ScheduleViewModel>().ReverseMap();
     }
 }

@@ -1,31 +1,15 @@
-﻿using Comfy.Product.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
-namespace Comfy.Db.SQL.Mappers
+namespace Database.Mappers;
+
+public class ScheduleMap : IEntityTypeConfiguration<Schedule>
 {
-    public class ScheduleMap : IEntityTypeConfiguration<Schedule>
+    public void Configure(EntityTypeBuilder<Schedule> builder)
     {
-        public void Configure(EntityTypeBuilder<Schedule> builder)
-        {
-            builder
-                .HasKey(prop => prop.Id);
-
-            builder
-                .Property(prop => prop.Deleted)
-                .HasDefaultValue(false)
-                .IsRequired();
-
-            builder
-                .Property(prop => prop.Date)
-                .HasDefaultValue(DateTime.Now)
-                .IsRequired();
-
-            builder
-                .Property(prop => prop.ProcedurePerformed)
-                .HasDefaultValue(false)
-                .IsRequired();
-        }
+        builder.HasKey(prop => prop.Id);
+        builder.Property(prop => prop.Deleted).IsRequired();
+        builder.Property(prop => prop.Date).HasDefaultValueSql("NOW()").IsRequired();
+        builder.Property(prop => prop.ProcedurePerformed).IsRequired();
     }
 }

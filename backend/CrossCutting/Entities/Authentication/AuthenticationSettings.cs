@@ -1,8 +1,7 @@
-﻿namespace Comfy.SystemObjects.Entities.Authentication
+﻿namespace CrossCutting.Entities.Authentication;
+
+public class AuthenticationSettings
 {
-    public class AuthenticationSettings
-    {
-        public string PublicKey { get; set; }
-        public KeycloakSettings KeycloakSettings { get; set; }
-    }
+    public string? PublicKey { get; set; }
+    public KeycloakSettings? KeycloakSettings { get; set; }
 }

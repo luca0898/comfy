@@ -1,70 +1,51 @@
-﻿using Comfy.SystemObjects.Interfaces;
+﻿using CrossCutting.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Data;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Comfy.SystemObjects
+namespace CrossCutting;
+
+public sealed class UnitOfWork : IUnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork
+    private readonly bool _alreadyInTransaction;
+    private readonly DbContext _dbContext;
+    private bool _disposed;
+    private IDbContextTransaction? _transaction;
+
+    public UnitOfWork(DbContext dbContext)
     {
-        private IDbContextTransaction _transaction;
-        private readonly DbContext _dbContext;
-        private bool _disposed = false;
-        private bool _alreadyInTransaction = false;
+        if (dbContext.Database.CurrentTransaction == null)
+            _transaction = dbContext.Database.BeginTransaction();
+        else
+            _alreadyInTransaction = true;
 
-        public UnitOfWork(DbContext dbContext, IsolationLevel isolationLevel = IsolationLevel.ReadCommitted)
+        _dbContext = dbContext;
+    }
+
+    public async Task CommitAsync(CancellationToken cancellationToken)
+    {
+        if (!_alreadyInTransaction && _transaction != null)
         {
-            if (dbContext.Database.CurrentTransaction == null)
-            {
-                _transaction = dbContext.Database.BeginTransaction();
-            }
-            else
-            {
-                _alreadyInTransaction = true;
-            }
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _transaction.CommitAsync(cancellationToken);
+        }
+    }
 
-            _dbContext = dbContext;
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposing || _disposed) return;
+
+        if (_transaction != null)
+        {
+            _transaction.Dispose();
+            _transaction = null;
         }
 
-        public virtual void Commit()
-        {
-            if (!_alreadyInTransaction)
-            {
-                _dbContext.SaveChanges();
-                _transaction.Commit();
-            }
-        }
-
-        public virtual async Task CommitAsync(CancellationToken cancellationToken)
-        {
-            if (!_alreadyInTransaction)
-            {
-                await _dbContext.SaveChangesAsync(cancellationToken);
-                await _transaction.CommitAsync(cancellationToken);
-            }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                if (_transaction != null)
-                {
-                    _transaction.Dispose();
-                    _transaction = null;
-                }
-
-                _disposed = true;
-            }
-        }
-
-        public virtual void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        _disposed = true;
     }
 }

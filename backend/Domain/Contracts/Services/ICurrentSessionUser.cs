@@ -1,10 +1,9 @@
-﻿namespace Comfy.Product.Contracts.Services
+﻿namespace Domain.Contracts.Services;
+
+public interface ICurrentSessionUser
 {
-    public interface ICurrentSessionUser
-    {
-        public string Id { get; set; }
-        public string GivenName { get; set; }
-        public string SurName { get; set; }
-        public string EmailAddress { get; set; }
-    }
+    public string? Id { get; init; }
+    public string? GivenName { get; init; }
+    public string? SurName { get; init; }
+    public string? EmailAddress { get; init; }
 }

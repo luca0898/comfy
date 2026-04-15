@@ -1,25 +1,17 @@
-﻿using AutoMapper;
-using Comfy.API.Registers.Mapping.Profiles;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Api.Registers.Mapping.Profiles;
 
-namespace Comfy.Registers.Mapping
+namespace Api.Registers.Mapping;
+
+public static class AutoMapperLoadProfiles
 {
-    public class AutoMapperLoadProfiles
+    public static void Load(IServiceCollection services)
     {
-        public static void Load(IServiceCollection services)
+        services.AddAutoMapper(config =>
         {
-            var x = new MapperConfiguration(config =>
-            {
-                config.AllowNullDestinationValues = true;
-                config.AllowNullCollections = true;
+            config.AllowNullDestinationValues = true;
+            config.AllowNullCollections = true;
 
-                // Adding each profile
-                config.AddProfile<ScheduleProfile>();
-                config.AddProfile<UserProfile>();
-                // ...
-            }).CreateMapper();
-
-            services.AddSingleton(register => x);
-        }
+            config.AddProfile<ScheduleProfile>();
+        });
     }
 }

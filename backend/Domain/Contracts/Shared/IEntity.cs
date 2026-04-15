@@ -1,8 +1,7 @@
-﻿namespace Comfy.Product.Contracts.Shared
+﻿namespace Domain.Contracts.Shared;
+
+public interface IEntity
 {
-    public interface IEntity
-    {
-        int Id { get; set; }
-        bool Deleted { get; set; }
-    }
+    int Id { get; set; }
+    bool Deleted { get; set; }
 }

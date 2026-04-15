@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Comfy.SystemObjects.Attributes
+namespace CrossCutting.Attributes;
+
+public class BearerAuthorizeAttribute : AuthorizeAttribute
 {
-    public class BearerAuthorizeAttribute : AuthorizeAttribute
+    public BearerAuthorizeAttribute(string policy)
     {
-        public BearerAuthorizeAttribute(string policy)
-        {
-            Policy = policy;
-            AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme;
-        }
+        Policy = policy;
+        AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme;
     }
 }

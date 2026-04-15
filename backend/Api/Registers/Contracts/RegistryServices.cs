@@ -1,15 +1,11 @@
-﻿using Comfy.Product.Contracts.Services;
-using Comfy.Service;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Domain.Contracts.Services;
 
-namespace Comfy.Registers.Contracts.Services
+namespace Api.Registers.Contracts;
+
+public static class RegistryServices
 {
-    public class RegistryServices
+    public static void Load(IServiceCollection services)
     {
-        public static void Load(IServiceCollection services)
-        {
-            services.AddTransient<IScheduleService, ScheduleService>();
-            services.AddTransient<IUserService, UserService>();
-        }
+        services.AddScoped<IScheduleService, IScheduleService>();
     }
 }

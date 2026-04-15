@@ -1,55 +1,52 @@
-﻿using Comfy.SystemObjects.Exceptions;
-using Comfy.SystemObjects.ViewModel;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mime;
+using System.Text.Json;
+using CrossCutting.Exceptions;
+using CrossCutting.ViewModel;
+using Microsoft.AspNetCore.Diagnostics;
 
-namespace Comfy.Middlewares
+namespace Api.Middlewares;
+
+public static class ExceptionMiddlewareExtensions
 {
-    public static class ExceptionMiddlewareExtensions
+    public static void ConfigureExceptionHandler(this IApplicationBuilder app)
     {
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILoggerFactory loggerFactory)
+        app.UseExceptionHandler(appError =>
         {
-            var logger = loggerFactory.CreateLogger(typeof(ExceptionMiddlewareExtensions));
-
-            app.UseExceptionHandler(appError =>
+            appError.Run(async context =>
             {
-                appError.Run(async context =>
+                context.Response.ContentType = MediaTypeNames.Application.Json;
+                var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+
+                if (contextFeature != null)
                 {
-                    context.Response.ContentType = MediaTypeNames.Application.Json;
-                    IExceptionHandlerFeature contextFeature = context.Features.Get<IExceptionHandlerFeature>();
-
-                    if (contextFeature != null)
+                    if (contextFeature.Error is ComfyApplicationException)
                     {
-                        if (contextFeature.Error is ComfyApplicationException)
+                        var comfyException = contextFeature.Error as ComfyApplicationException;
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+
+                        var errorModel = new ErrorResponseViewModel
                         {
-                            ComfyApplicationException comfyException = contextFeature.Error as ComfyApplicationException;
-                            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            ErrorCode = nameof(HttpStatusCode.BadRequest),
+                            Message = contextFeature.Error.Message,
+                            Errors = contextFeature.Error.Message
+                        };
 
-                            ErrorResponseViewModel errorModel = new ErrorResponseViewModel
-                            {
-                                ErrorCode = comfyException.StatusCode.ToString(),
-                                Message = contextFeature.Error.Message
-                            };
-
-                            await context.Response.WriteAsync(Newtonsoft.Json.JsonConvert.SerializeObject(errorModel));
-                        }
-                        else
-                        {
-                            logger.LogError($"Something went wrong: {contextFeature.Error}");
-                            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-                            await context.Response.WriteAsync(new ErrorResponseViewModel()
-                            {
-                                Message = "Internal Server Error."
-                            }.ToString());
-                        }
+                        await context.Response.WriteAsync(JsonSerializer.Serialize(errorModel));
                     }
-                });
+                    else
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                        await context.Response.WriteAsync(new ErrorResponseViewModel
+                        {
+                            Message = "Internal Server Error.",
+                            ErrorCode = nameof(HttpStatusCode.InternalServerError),
+                            Errors = contextFeature.Error.Message
+                        }.ToString());
+                    }
+                }
             });
-        }
+        });
     }
 }

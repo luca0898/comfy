@@ -1,16 +1,12 @@
-﻿using Comfy.Db.SQL.Repositories.Shared;
-using Comfy.Product.Contracts.Repositories;
-using Comfy.Product.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Database.Repositories.Shared;
+using Domain.Contracts.Repositories;
+using Domain.Entities;
 
-namespace Comfy.Db.SQL.Repositories
+namespace Database.Repositories;
+
+public class ScheduleRepository : GenericRelationalRepository<Schedule>, IScheduleRepository
 {
-    public class ScheduleRepository : GenericRelationalRepository<Schedule>, IScheduleRepository
+    public ScheduleRepository(DbContext dbContext) : base(dbContext)
     {
-
-        public ScheduleRepository(DbContext dbContext) : base(dbContext)
-        {
-
-        }
     }
 }

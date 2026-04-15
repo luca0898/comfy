@@ -1,9 +1,6 @@
-﻿using Comfy.Product.Contracts.Services.Shared;
-using Comfy.Product.Entities;
+﻿using Domain.Contracts.Services.Shared;
+using Domain.Entities;
 
-namespace Comfy.Product.Contracts.Services
-{
-    public interface IScheduleService : IGenericCachedEntityService<Schedule>
-    {
-    }
-}
+namespace Domain.Contracts.Services;
+
+public interface IScheduleService : IGenericEntityService<Schedule>;

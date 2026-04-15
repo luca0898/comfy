@@ -1,21 +1,14 @@
-﻿using AutoMapper;
-using Comfy.Controllers.Shared;
-using Comfy.Product.Contracts.Services;
-using Comfy.Product.Entities;
-using Comfy.Product.ViewModel;
-using Comfy.SystemObjects.Attributes;
+﻿using Api.Controllers.Shared;
+using AutoMapper;
+using CrossCutting.Attributes;
+using Domain.Contracts.Services;
+using Domain.Entities;
+using Domain.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Comfy.Controllers
-{
-    [Route("v1/schedule"), BearerAuthorize("Authenticated")]
-    public class ScheduleController : BaseController<Schedule, ScheduleViewModel, ScheduleViewModel>
-    {
-        public ScheduleController(
-            IScheduleService scheduleService,
-            IMapper mapper)
-            : base(scheduleService, mapper)
-        {
-        }
-    }
-}
+namespace Api.Controllers;
+
+[Route("v1/schedule")]
+[BearerAuthorize("Authenticated")]
+public class ScheduleController(IScheduleService scheduleService, IMapper mapper)
+    : BaseController<Schedule, ScheduleViewModel, ScheduleViewModel>(scheduleService, mapper);

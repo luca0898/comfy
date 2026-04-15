@@ -1,104 +1,93 @@
-using Comfy.Product.Contracts.Services;
-using Comfy.Product.Entities;
-using Comfy.SystemObjects.Entities.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.IO;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
+using CrossCutting.Entities.Authentication;
+using Domain.Contracts.Services;
+using Domain.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
-namespace Comfy.Registers.Authentication
+namespace Api.Registers.Authentication;
+
+public static class AuthenticationRegister
 {
-    public static class AuthenticationRegister
+    public static void Load(IServiceCollection services, IConfiguration configuration)
     {
-        public static void Load(IServiceCollection services, IConfiguration configuration)
+        var authenticationSettings = new AuthenticationSettings();
+        configuration.Bind(nameof(authenticationSettings), authenticationSettings);
+        services.AddSingleton(authenticationSettings);
+
+        services
+            .AddAuthentication(o =>
+            {
+                o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.RequireHttpsMetadata = false;
+                o.Authority = authenticationSettings.KeycloakSettings?.Authority;
+                o.Audience = authenticationSettings.KeycloakSettings?.Audience;
+
+                var publicRsa = RSA.Create();
+                publicRsa.FromXmlString(
+                    File.ReadAllText(
+                        Path.Combine(Directory.GetCurrentDirectory(), "Cert",
+                            authenticationSettings.PublicKey ?? throw new InvalidOperationException()))
+                );
+
+                var signingKey = new RsaSecurityKey(publicRsa);
+                o.SaveToken = true;
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    IssuerSigningKey = signingKey,
+                    ValidateIssuerSigningKey = true,
+
+                    ValidIssuer = authenticationSettings.KeycloakSettings?.Issuer,
+                    ValidateIssuer = true,
+
+                    ValidAudience = authenticationSettings.KeycloakSettings?.Audience,
+                    ValidateAudience = true
+                };
+
+                o.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/v1/notify"))
+                            context.Token = accessToken;
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+        services.AddCors();
+        services.AddAuthorization(opt =>
         {
-            AuthenticationSettings authenticationSettings = new AuthenticationSettings();
-            configuration.Bind(nameof(authenticationSettings), authenticationSettings);
-            services.AddSingleton(authenticationSettings);
+            opt.AddPolicy("Authenticated", p => p.RequireAssertion(require => require.User.Identity!.IsAuthenticated));
+            opt.AddPolicy("Anonymous", p => p.RequireAssertion(o => true));
+        });
 
-            services
-                .AddAuthentication(o =>
-                {
-                    o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    o.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                    o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(o =>
-                {
-                    o.RequireHttpsMetadata = false;
-                    o.Authority = authenticationSettings.KeycloakSettings.Authority;
-                    o.Audience = authenticationSettings.KeycloakSettings.Audience;
+        services.AddScoped<ICurrentSessionUser>(c =>
+        {
+            var context = c.GetRequiredService<IHttpContextAccessor>().HttpContext;
 
-                    RSA publicRsa = RSA.Create();
-                    publicRsa.FromXmlString(
-                        File.ReadAllText(
-                            Path.Combine(Directory.GetCurrentDirectory(), "Cert", authenticationSettings.PublicKey))
-                        );
+            if (context?.User.Identity is not ClaimsIdentity { IsAuthenticated: true } identity)
+                throw new Exception("No claims found");
 
-                    RsaSecurityKey signingKey = new RsaSecurityKey(publicRsa);
-                    o.SaveToken = true;
-                    o.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        IssuerSigningKey = signingKey,
-                        ValidateIssuerSigningKey = true,
+            var claimsSchemaPrefix = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims";
+            var clamis = identity.Claims.ToArray() ?? throw new Exception("No claims found");
 
-                        ValidIssuer = authenticationSettings.KeycloakSettings.Issuer,
-                        ValidateIssuer = true,
-
-                        ValidAudience = authenticationSettings.KeycloakSettings.Audience,
-                        ValidateAudience = true
-                    };
-
-                    o.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            var accessToken = context.Request.Query["access_token"];
-
-                            var path = context.HttpContext.Request.Path;
-                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/v1/notify"))
-                            {
-                                context.Token = accessToken;
-                            }
-                            return Task.CompletedTask;
-                        }
-                    };
-                });
-
-            services.AddCors();
-            services.AddAuthorization(opt =>
+            return new CurrentSessionUser
             {
-                opt.AddPolicy("Authenticated", p => p.RequireAssertion(require => require.User.Identity.IsAuthenticated));
-                opt.AddPolicy("Anonymous", p => p.RequireAssertion(o => true));
-            });
-
-            services.AddScoped<ICurrentSessionUser>(c =>
-            {
-                var context = c.GetRequiredService<IHttpContextAccessor>().HttpContext;
-
-                if (context != null && context.User.Identity.IsAuthenticated)
-                {
-                    ClaimsIdentity identity = (ClaimsIdentity)context.User.Identity;
-
-                    string claimsSchemaPrefix = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims";
-
-                    return new CurrentSessionUser
-                    {
-                        Id = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/nameidentifier")?.Value,
-                        GivenName = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/givenname")?.Value,
-                        SurName = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/surname")?.Value,
-                        EmailAddress = identity.Claims.FirstOrDefault(c => c.Type == $"{claimsSchemaPrefix}/emailaddress")?.Value
-                    };
-                }
-
-                return null;
-            });
-        }
+                Id = clamis.FirstOrDefault(claim => claim.Type == $"{claimsSchemaPrefix}/nameidentifier")?.Value,
+                GivenName = clamis.FirstOrDefault(claim => claim.Type == $"{claimsSchemaPrefix}/givenname")?.Value,
+                SurName = clamis.FirstOrDefault(claim => claim.Type == $"{claimsSchemaPrefix}/surname")?.Value,
+                EmailAddress = clamis.FirstOrDefault(claim => claim.Type == $"{claimsSchemaPrefix}/emailaddress")?.Value
+            };
+        });
     }
 }
