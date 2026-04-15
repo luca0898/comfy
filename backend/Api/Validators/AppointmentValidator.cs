@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Api.Validators;
 
-public class ScheduleValidator : AbstractValidator<ScheduleViewModel>
+public class AppointmentValidator : AbstractValidator<AppointmentViewModel>
 {
-    public ScheduleValidator()
+    public AppointmentValidator()
     {
         RuleFor(x => x.Date)
             .NotNull()

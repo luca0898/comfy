@@ -7,6 +7,6 @@ public static class RegistryRepositories
 {
     public static void Load(IServiceCollection services)
     {
-        services.AddTransient<IScheduleRepository, ScheduleRepository>();
+        services.AddTransient<IAppointmentRepository, AppointmentRepository>();
     }
 }

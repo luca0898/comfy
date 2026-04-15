@@ -3,6 +3,6 @@ using Domain.Entities;
 
 namespace Domain.Contracts.Repositories;
 
-public interface IScheduleRepository : IGenericRepository<Schedule>
+public interface IAppointmentRepository : IGenericRepository<Appointment>
 {
 }

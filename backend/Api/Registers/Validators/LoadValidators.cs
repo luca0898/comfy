@@ -9,6 +9,6 @@ public static class LoadValidators
     public static void Load(IServiceCollection services)
     {
         services.AddMvc(options => options.Filters.Add(new ModelValidationFilter()));
-        services.AddValidatorsFromAssemblyContaining<ScheduleValidator>();
+        services.AddValidatorsFromAssemblyContaining<AppointmentValidator>();
     }
 }

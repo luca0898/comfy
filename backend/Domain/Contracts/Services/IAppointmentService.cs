@@ -3,4 +3,4 @@ using Domain.Entities;
 
 namespace Domain.Contracts.Services;
 
-public interface IScheduleService : IGenericEntityService<Schedule>;
+public interface IAppointmentService : IGenericEntityService<Appointment>;

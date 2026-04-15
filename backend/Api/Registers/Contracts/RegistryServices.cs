@@ -6,6 +6,6 @@ public static class RegistryServices
 {
     public static void Load(IServiceCollection services)
     {
-        services.AddScoped<IScheduleService, IScheduleService>();
+        services.AddScoped<IAppointmentService, IAppointmentService>();
     }
 }

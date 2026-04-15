@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;
 
-[Route("v1/schedule")]
+[Route("v1/Appointment")]
 [BearerAuthorize("Authenticated")]
-public class ScheduleController(IScheduleService scheduleService, IMapper mapper)
-    : BaseController<Schedule, ScheduleViewModel, ScheduleViewModel>(scheduleService, mapper);
+public class AppointmentController(IAppointmentService AppointmentService, IMapper mapper)
+    : BaseController<Appointment, AppointmentViewModel, AppointmentViewModel>(AppointmentService, mapper);

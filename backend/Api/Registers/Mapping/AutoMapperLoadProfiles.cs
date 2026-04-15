@@ -11,7 +11,7 @@ public static class AutoMapperLoadProfiles
             config.AllowNullDestinationValues = true;
             config.AllowNullCollections = true;
 
-            config.AddProfile<ScheduleProfile>();
+            config.AddProfile<AppointmentProfile>();
         });
     }
 }

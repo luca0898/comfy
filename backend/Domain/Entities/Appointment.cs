@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Schedule : Entity
+public class Appointment : Entity
 {
     public DateTime Date { get; init; }
     public bool ProcedurePerformed { get; init; }

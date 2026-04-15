@@ -24,7 +24,7 @@ public abstract class GenericRelationalRepository<TEntity>(DbContext dbContext)
     {
         return await _dbSetEntity
             .AsNoTracking()
-            .FirstOrDefaultAsync(schedule => schedule.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(Appointment => Appointment.Id == id, cancellationToken);
     }
 
     public async Task<TEntity> Create(TEntity entity, CancellationToken cancellationToken = default)

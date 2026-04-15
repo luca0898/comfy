@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Application;
 
-public class ScheduleService(
-    IScheduleRepository scheduleRepository,
+public class AppointmentService(
+    IAppointmentRepository AppointmentRepository,
     IUnitOfWorkFactory uow)
-    : GenericEntityService<Schedule>(scheduleRepository, uow), IScheduleService;
+    : GenericEntityService<Appointment>(AppointmentRepository, uow), IAppointmentService;

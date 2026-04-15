@@ -33,4 +33,4 @@ This project is designed to test my level of code design for an API
    ```
 7. Open a new tab in your browser and type http://localhost:5000/swagger/index.html and authorize using the admin:admin
    default user
-8. Send a request using the POST /v1/schedule swagger item
+8. Send a request using the POST /v1/Appointment swagger item

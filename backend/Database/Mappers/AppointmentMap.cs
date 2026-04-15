@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Database.Mappers;
 
-public class ScheduleMap : IEntityTypeConfiguration<Schedule>
+public class AppointmentMap : IEntityTypeConfiguration<Appointment>
 {
-    public void Configure(EntityTypeBuilder<Schedule> builder)
+    public void Configure(EntityTypeBuilder<Appointment> builder)
     {
         builder.HasKey(prop => prop.Id);
         builder.Property(prop => prop.Deleted).IsRequired();
